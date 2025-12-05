@@ -52,6 +52,41 @@ node bundle/gemini.js --version
 - No secure keychain → credentials stored in plain config files.
 - Bash parsing without tree-sitter.
 
+## Documentation & Fixes
+
+### 📚 Complete Documentation
+
+- **[Test Results](./GEMINI_TEST_v0.21.1.md)** - Comprehensive test report with analysis
+- **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
+- **[Patches & Fixes](./docs/patches/)** - Known issues and workarounds
+
+### 🔧 Common Issues & Solutions
+
+| Issue | Quick Fix | Documentation |
+|-------|-----------|---------------|
+| node-pty warning | `export NODE_NO_WARNINGS=1` | [Details](./docs/patches/node-pty-warning.md) |
+| CLI syntax (`--json`) | Use `-o json` instead | [Details](./docs/patches/cli-syntax-differences.md) |
+| Hooks commands | Use interactive mode `/hooks` | [Details](./docs/patches/hooks-interactive-only.md) |
+
+### 📝 Quick Reference
+
+```bash
+# Correct usage examples
+gemini -o json "your prompt"              # ✅ JSON output
+gemini --output-format json "prompt"      # ✅ Also works
+gemini --json "prompt"                    # ❌ Wrong syntax
+
+# Quiet mode (suppress warnings)
+export NODE_NO_WARNINGS=1
+gemini "your prompt"
+
+# Hooks management (interactive only)
+gemini           # Start interactive mode
+/hooks           # Manage hooks
+```
+
+See [docs/patches/README.md](./docs/patches/README.md) for complete solutions.
+
 ## Updating
 
 ```bash
@@ -66,7 +101,11 @@ npm install -g @mmmbuto/gemini-cli-termux@latest
 ## Tests
 
 - Suite: [`GEMINI_TEST_SUITE.md`](./GEMINI_TEST_SUITE.md)
-- Latest report: pending rerun for 0.21.1-termux (previous 0.21.0-termux: 33/37 pass; gaps: `gemini models list`, `gemini hooks` (x2), `gemini auth status`; package/binary 6/6, Termux 8/8, PTY optional module missing but non-blocking).
+- Latest report: [`GEMINI_TEST_REPORT_v0.21.1.md`](./GEMINI_TEST_REPORT_v0.21.1.md)
+  - Total: 37 tests; ✅ Pass: 33; ❌ Fail: 4; ⚠️ Skip: 0 (89%).
+  - Known gaps (not implemented): `gemini models list`, `gemini hooks` (x2), `gemini auth status`.
+  - Package/Binary: 6/6 pass; Termux-specific: 8/8 pass.
+  - Optional native modules (node-pty, keytar, tree-sitter-bash) not built on Termux → warnings expected; CLI remains functional.
 
 ## Changelog (Termux)
 
