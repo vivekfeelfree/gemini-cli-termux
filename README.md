@@ -27,7 +27,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs-lts -y
 npm install -g @mmmbuto/gemini-cli-termux
 
-gemini --version  # expected: 0.20.1-termux (latest)
+gemini --version  # expected: 0.21.2-termux (latest)
 ```
 
 Build from source:
@@ -56,17 +56,18 @@ node bundle/gemini.js --version
 
 ### 📚 Complete Documentation
 
-- **[Test Results](./GEMINI_TEST_v0.21.1.md)** - Comprehensive test report with analysis
+- **[Test Results](./GEMINI_TEST_REPORT_v0.21.2.md)** - Comprehensive test
+  report with analysis
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
 - **[Patches & Fixes](./docs/patches/)** - Known issues and workarounds
 
 ### 🔧 Common Issues & Solutions
 
-| Issue | Quick Fix | Documentation |
-|-------|-----------|---------------|
-| node-pty warning | `export NODE_NO_WARNINGS=1` | [Details](./docs/patches/node-pty-warning.md) |
-| CLI syntax (`--json`) | Use `-o json` instead | [Details](./docs/patches/cli-syntax-differences.md) |
-| Hooks commands | Use interactive mode `/hooks` | [Details](./docs/patches/hooks-interactive-only.md) |
+| Issue                 | Quick Fix                     | Documentation                                       |
+| --------------------- | ----------------------------- | --------------------------------------------------- |
+| node-pty warning      | `export NODE_NO_WARNINGS=1`   | [Details](./docs/patches/node-pty-warning.md)       |
+| CLI syntax (`--json`) | Use `-o json` instead         | [Details](./docs/patches/cli-syntax-differences.md) |
+| Hooks commands        | Use interactive mode `/hooks` | [Details](./docs/patches/hooks-interactive-only.md) |
 
 ### 📝 Quick Reference
 
@@ -95,21 +96,25 @@ npm install -g @mmmbuto/gemini-cli-termux@latest
 
 ### Versions
 
-- **latest**: 0.21.1-termux (this build)
-- **stable**: 0.21.1-termux
+- **latest**: 0.21.2-termux (this build)
+- **stable**: 0.21.2-termux
 
 ## Tests
 
 - Suite: [`GEMINI_TEST_SUITE.md`](./GEMINI_TEST_SUITE.md)
-- Latest report: [`GEMINI_TEST_REPORT_v0.21.1.md`](./GEMINI_TEST_REPORT_v0.21.1.md)
+- Latest report:
+  [`GEMINI_TEST_REPORT_v0.21.2.md`](./GEMINI_TEST_REPORT_v0.21.2.md)
   - Total: 37 tests; ✅ Pass: 33; ❌ Fail: 4; ⚠️ Skip: 0 (89%).
-  - Known gaps (not implemented): `gemini models list`, `gemini hooks` (x2), `gemini auth status`.
+  - Known gaps (not implemented): `gemini models list`, `gemini hooks` (x2),
+    `gemini auth status`.
   - Package/Binary: 6/6 pass; Termux-specific: 8/8 pass.
-  - Optional native modules (node-pty, keytar, tree-sitter-bash) not built on Termux → warnings expected; CLI remains functional.
+  - Optional native modules (node-pty, keytar, tree-sitter-bash) not built on
+    Termux → warnings expected; CLI remains functional.
 
 ## Changelog (Termux)
 
-- **0.21.1-termux** (latest/stable): upstream main sync; Termux patches retained; bundle export fix for `createInkStdio`; tests pending refresh.
+- **0.21.2-termux** (latest/stable): upstream main sync; Termux patches
+  retained; bundle export fix for `createInkStdio`; tests pending refresh.
 
 ## Upstream Tracking
 
