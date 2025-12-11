@@ -15,7 +15,7 @@ Temporary compatibility fork of `google-gemini/gemini-cli` for Android Termux.
 
 - Tracks upstream regularly.
 - Minimal patches only: Termux clipboard env fix, native modules marked
-  optional.
+  optional, PTY auto-disabled on Termux (fallback to child_process).
 - Bundled for ARM64/Android.
 - Sunset: once upstream adds Termux support, migrate back to
   `@google/gemini-cli`.
@@ -27,7 +27,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs-lts -y
 npm install -g @mmmbuto/gemini-cli-termux
 
-gemini --version  # expected: 0.21.2-termux (latest)
+gemini --version  # expected: 0.21.4-termux (latest)
 ```
 
 Build from source:
