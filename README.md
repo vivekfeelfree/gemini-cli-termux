@@ -56,7 +56,7 @@ node bundle/gemini.js --version
 
 ### 📚 Complete Documentation
 
-- **[Test Results](./GEMINI_TEST_REPORT_v0.21.3.md)** - Comprehensive test
+- **[Test Results](./GEMINI_TEST_REPORT_v0.21.4.md)** - Comprehensive test
   report with analysis
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
 - **[Patches & Fixes](./docs/patches/)** - Known issues and workarounds
