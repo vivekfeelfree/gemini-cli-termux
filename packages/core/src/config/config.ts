@@ -92,6 +92,7 @@ import { debugLogger } from '../utils/debugLogger.js';
 import { startupProfiler } from '../telemetry/startupProfiler.js';
 
 import { ApprovalMode } from '../policy/types.js';
+import type { ContextMemoryOptions } from '../utils/contextMemory.js';
 
 export interface AccessibilitySettings {
   disableLoadingPhrases?: boolean;
@@ -260,6 +261,9 @@ export interface ConfigParameters {
   };
   checkpointing?: boolean;
   proxy?: string;
+  notifications?: {
+    ttsEnabled?: boolean;
+  };
   cwd: string;
   fileDiscoveryService?: FileDiscoveryService;
   includeDirectories?: string[];
@@ -324,6 +328,7 @@ export interface ConfigParameters {
   enableAgents?: boolean;
   enableModelAvailabilityService?: boolean;
   experimentalJitContext?: boolean;
+  contextMemoryOptions?: ContextMemoryOptions;
 }
 
 export class Config {
@@ -365,6 +370,7 @@ export class Config {
   private baseLlmClient!: BaseLlmClient;
   private modelRouterService: ModelRouterService;
   private readonly modelAvailabilityService: ModelAvailabilityService;
+  private readonly ttsEnabled: boolean;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
     respectGeminiIgnore: boolean;
@@ -448,6 +454,7 @@ export class Config {
   private readonly enableAgents: boolean;
 
   private readonly experimentalJitContext: boolean;
+  private readonly contextMemoryOptions?: ContextMemoryOptions;
   private contextManager?: ContextManager;
 
   constructor(params: ConfigParameters) {
@@ -489,6 +496,7 @@ export class Config {
       useCliAuth: params.telemetry?.useCliAuth,
     };
     this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
+    this.ttsEnabled = params.notifications?.ttsEnabled ?? true;
 
     this.fileFiltering = {
       respectGitIgnore:
@@ -531,6 +539,7 @@ export class Config {
       params.loadMemoryFromIncludeDirectories ?? false;
     this.importFormat = params.importFormat ?? 'tree';
     this.discoveryMaxDirs = params.discoveryMaxDirs ?? 200;
+    this.contextMemoryOptions = params.contextMemoryOptions;
     this.compressionThreshold = params.compressionThreshold;
     this.interactive = params.interactive ?? false;
     this.ptyInfo = params.ptyInfo ?? 'child_process';
@@ -813,6 +822,10 @@ export class Config {
 
   getDiscoveryMaxDirs(): number {
     return this.discoveryMaxDirs;
+  }
+
+  getContextMemoryOptions(): ContextMemoryOptions | undefined {
+    return this.contextMemoryOptions;
   }
 
   getContentGeneratorConfig(): ContentGeneratorConfig {
@@ -1406,6 +1419,10 @@ export class Config {
 
   getEnableShellOutputEfficiency(): boolean {
     return this.enableShellOutputEfficiency;
+  }
+
+  isTtsEnabled(): boolean {
+    return this.ttsEnabled;
   }
 
   getShellToolInactivityTimeout(): number {

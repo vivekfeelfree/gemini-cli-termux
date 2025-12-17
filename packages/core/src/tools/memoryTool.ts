@@ -25,6 +25,7 @@ import type {
 import { ToolErrorType } from './tool-error.js';
 import { MEMORY_TOOL_NAME } from './tool-names.js';
 import type { MessageBus } from '../confirmation-bus/message-bus.js';
+import { appendContextMemoryEntry } from '../utils/contextMemory.js';
 
 const memoryToolSchemaData: FunctionDeclaration = {
   name: MEMORY_TOOL_NAME,
@@ -37,6 +38,12 @@ const memoryToolSchemaData: FunctionDeclaration = {
         type: 'string',
         description:
           'The specific fact or piece of information to remember. Should be a clear, self-contained statement.',
+      },
+      target: {
+        type: 'string',
+        enum: ['user', 'base'],
+        description:
+          'Where to store the fact: user (default) writes to user.json/journal; base writes to base.json (requires allowBaseWrite setting).',
       },
     },
     required: ['fact'],
@@ -94,6 +101,7 @@ export function getAllGeminiMdFilenames(): string[] {
 
 interface SaveMemoryParams {
   fact: string;
+  target?: 'user' | 'base';
   modified_by_user?: boolean;
   modified_content?: string;
 }
@@ -233,7 +241,7 @@ class MemoryToolInvocation extends BaseToolInvocation<
   }
 
   async execute(_signal: AbortSignal): Promise<ToolResult> {
-    const { fact, modified_by_user, modified_content } = this.params;
+    const { fact, modified_by_user, modified_content, target } = this.params;
 
     try {
       if (modified_by_user && modified_content !== undefined) {
@@ -264,6 +272,7 @@ class MemoryToolInvocation extends BaseToolInvocation<
             writeFile: fs.writeFile,
             mkdir: fs.mkdir,
           },
+          target ?? 'user',
         );
         const successMessage = `Okay, I've remembered that: "${fact}"`;
         return {
@@ -320,6 +329,9 @@ export class MemoryTool
     if (params.fact.trim() === '') {
       return 'Parameter "fact" must be a non-empty string.';
     }
+    if (params.target && params.target !== 'user' && params.target !== 'base') {
+      return 'Parameter "target" must be "user" or "base" if provided.';
+    }
 
     return null;
   }
@@ -353,6 +365,7 @@ export class MemoryTool
         options: { recursive: boolean },
       ) => Promise<string | undefined>;
     },
+    target: 'user' | 'base' = 'user',
   ): Promise<void> {
     try {
       await fsAdapter.mkdir(path.dirname(memoryFilePath), { recursive: true });
@@ -366,6 +379,15 @@ export class MemoryTool
       const newContent = computeNewContent(currentContent, text);
 
       await fsAdapter.writeFile(memoryFilePath, newContent, 'utf-8');
+      // Also persist into JSON context memory (append-only journal or base)
+      try {
+        await appendContextMemoryEntry(text, target);
+      } catch (err) {
+        console.warn(
+          '[MemoryTool] Failed to mirror entry to context memory:',
+          err,
+        );
+      }
     } catch (error) {
       console.error(
         `[MemoryTool] Error adding memory entry to ${memoryFilePath}:`,

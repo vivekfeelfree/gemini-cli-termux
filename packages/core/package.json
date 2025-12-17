@@ -1,6 +1,6 @@
 {
   "name": "@google/gemini-cli-core",
-  "version": "0.22.2-termux",
+  "version": "0.22.3-termux",
   "description": "Gemini CLI Core",
   "license": "Apache-2.0",
   "repository": {
@@ -69,15 +69,6 @@
     "web-tree-sitter": "^0.25.10",
     "ws": "^8.18.0",
     "zod": "^3.25.76"
-  },
-  "optionalDependencies": {
-    "@lydell/node-pty": "1.1.0",
-    "@lydell/node-pty-darwin-arm64": "1.1.0",
-    "@lydell/node-pty-darwin-x64": "1.1.0",
-    "@lydell/node-pty-linux-x64": "1.1.0",
-    "@lydell/node-pty-win32-arm64": "1.1.0",
-    "@lydell/node-pty-win32-x64": "1.1.0",
-    "node-pty": "^1.0.0"
   },
   "devDependencies": {
     "@google/gemini-cli-test-utils": "file:../test-utils",
