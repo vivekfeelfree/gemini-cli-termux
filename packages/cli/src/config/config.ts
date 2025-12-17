@@ -8,7 +8,10 @@ import yargs from 'yargs/yargs';
 import { hideBin } from 'yargs/helpers';
 import process from 'node:process';
 import { mcpCommand } from '../commands/mcp.js';
-import type { OutputFormat , ContextMemoryOptions } from '@google/gemini-cli-core';
+import type {
+  OutputFormat,
+  ContextMemoryOptions,
+} from '@google/gemini-cli-core';
 import { extensionsCommand } from '../commands/extensions.js';
 import { hooksCommand } from '../commands/hooks.js';
 import {
@@ -56,6 +59,7 @@ function buildContextMemoryOptions(settings: Settings): ContextMemoryOptions {
   const defaults = getDefaultContextMemoryOptions();
   const userPaths = settings.context?.contextMemory?.paths || {};
   const auto = settings.context?.contextMemory?.autoLoad || {};
+  const mcpImport = settings.context?.contextMemory?.mcpImport || {};
   const options: ContextMemoryOptions = {
     ...defaults,
     enabled: settings.context?.contextMemory?.enabled ?? true,
@@ -68,6 +72,13 @@ function buildContextMemoryOptions(settings: Settings): ContextMemoryOptions {
     autoLoadJsonBase: auto.jsonBase ?? true,
     autoLoadJsonUser: auto.jsonUser ?? true,
     allowBaseWrite: settings.context?.contextMemory?.allowBaseWrite ?? false,
+    mcpImport: {
+      enabled: mcpImport.enabled ?? false,
+      categories:
+        (mcpImport.categories as string[] | undefined) ??
+        defaults.mcpImport.categories,
+      scope: (mcpImport.scope as string) ?? defaults.mcpImport.scope,
+    },
     paths: {
       base: userPaths.base || defaults.paths.base,
       user: userPaths.user || defaults.paths.user,

@@ -64,6 +64,11 @@ export interface ContextMemoryOptions {
   autoLoadJsonBase: boolean;
   autoLoadJsonUser: boolean;
   allowBaseWrite: boolean;
+  mcpImport: {
+    enabled: boolean;
+    categories: string[];
+    scope: string;
+  };
   paths: {
     base: string;
     user: string;
@@ -405,6 +410,17 @@ export function getDefaultContextMemoryOptions(): ContextMemoryOptions {
     autoLoadJsonBase: true,
     autoLoadJsonUser: true,
     allowBaseWrite: false,
+    mcpImport: {
+      enabled: false,
+      categories: [
+        'identity',
+        'infrastructure',
+        'projects',
+        'workflow',
+        'base',
+      ],
+      scope: 'global',
+    },
     paths: {
       base: path.join(dir, 'base.json'),
       user: path.join(dir, 'user.json'),

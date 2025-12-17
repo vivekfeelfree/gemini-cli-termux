@@ -163,6 +163,16 @@ const SETTINGS_SCHEMA = {
     description: 'General application settings.',
     showInDialog: false,
     properties: {
+      mobileSettings: {
+        type: 'boolean',
+        label: 'Mobile Settings Layout',
+        category: 'General',
+        requiresRestart: false,
+        default: true,
+        description:
+          'Use compact /settings layout for narrow terminals (auto-detected, can be turned off).',
+        showInDialog: true,
+      },
       previewFeatures: {
         type: 'boolean',
         label: 'Preview Features (e.g., models)',
@@ -1022,6 +1032,57 @@ const SETTINGS_SCHEMA = {
                 default: '',
                 description: 'Path to user.journal.jsonl (append-only).',
                 showInDialog: false,
+              },
+            },
+          },
+          mcpImport: {
+            type: 'object',
+            label: 'MCP Import',
+            category: 'Context',
+            requiresRestart: false,
+            default: {},
+            description:
+              'Import remote MCP memory categories into local base.json (merge-safe).',
+            showInDialog: false,
+            properties: {
+              enabled: {
+                type: 'boolean',
+                label: 'Enable MCP Import',
+                category: 'Context',
+                requiresRestart: false,
+                default: false,
+                description:
+                  'Allow the MCP import tool to write remote memory into base.json (requires base write enabled).',
+                showInDialog: true,
+              },
+              categories: {
+                type: 'array',
+                label: 'Categories to Import',
+                category: 'Context',
+                requiresRestart: false,
+                default: [
+                  'identity',
+                  'infrastructure',
+                  'projects',
+                  'workflow',
+                  'base',
+                ],
+                description: 'MCP categories to pull into base.json.',
+                showInDialog: true,
+                items: {
+                  type: 'string',
+                  description: 'Category name',
+                },
+              },
+              scope: {
+                type: 'string',
+                label: 'Import Scope',
+                category: 'Context',
+                requiresRestart: false,
+                default: 'global',
+                description:
+                  'Scope to apply to imported entries (e.g., global, host:<id>, project:<id>).',
+                showInDialog: true,
               },
             },
           },
