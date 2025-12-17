@@ -1,4 +1,4 @@
-# 🧪 Gemini CLI Termux Test Suite (v0.22.0-termux)
+# 🧪 Gemini CLI Termux Test Suite (v0.22.1-termux)
 
 **Goal**: Validate the Termux build without native deps
 (node-pty/keytar/tree-sitter). Run from a clean shell on Termux ARM64.
@@ -10,7 +10,7 @@
 
 ## 1. Version & Env
 
-1.1 `gemini --version` → shows `0.22.0-termux` 1.2 `node -v`, `uname -m`,
+1.1 `gemini --version` → shows `0.22.1-termux` 1.2 `node -v`, `uname -m`,
 `echo $PREFIX` (expect Termux paths / aarch64)
 
 ## 2. CLI Basics
@@ -49,12 +49,33 @@ _Feature not currently available in this build._
 ## 9. Package/binary
 
 9.1 `ls $(npm root -g)/@mmmbuto/gemini-cli-termux/bundle/gemini.js` exists 9.2
-`node bundle/gemini.js --version` (from repo) prints 0.22.0-termux
+`node bundle/gemini.js --version` (from repo) prints 0.22.1-termux
 
 ## 10. Known limits (assert graceful handling)
 
 10.1 `node-pty` optional: running `require('node-pty')` should fail gracefully
 (not crash CLI)
+
+## 11. Termux-API Integration (New v0.22.1)
+
+11.1 **Detection**:
+`node -e "console.log(require('./packages/core/dist/utils/termux-detect.js').isTermux())"`
+returns `true`
+
+11.2 **Tool Discovery**:
+
+- Run `bash scripts/termux-tools/discovery.sh`
+- Expect JSON array with tools like `termux_battery_status`
+
+  11.3 **Tool Call**:
+
+- Run `echo '{}' | bash scripts/termux-tools/call.sh termux_battery_status`
+- Expect JSON output or valid Termux-API response
+
+  11.4 **Installation Helpers**:
+
+- `make termux-install` runs without error
+- `scripts/termux-setup.sh` completes successfully
 
 ## Expected Outcome
 
