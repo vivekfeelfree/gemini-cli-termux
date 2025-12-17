@@ -121,13 +121,13 @@ npm install -g @mmmbuto/gemini-cli-termux@latest
   - Optional native modules (node-pty, keytar, tree-sitter-bash) not built on
     Termux → warnings expected; CLI remains functional.
 
-## Termux-API Integration (NEW!)
+## Termux-API Integration
 
 This fork supports optional integration with Termux-API commands for Android
 device access. Enable Gemini to interact with your device hardware and Android
 features.
 
-**Context memory + TTS note:**
+## Context memory + TTS note:
 
 - The Termux fork ships JSON context memory at
   `~/.gemini/context_memory/{base.json,user.json,user.journal.jsonl}`. In
