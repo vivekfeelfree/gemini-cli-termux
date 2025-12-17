@@ -308,6 +308,27 @@ const SETTINGS_SCHEMA = {
       },
     },
   },
+  notifications: {
+    type: 'object',
+    label: 'Notifications',
+    category: 'General',
+    requiresRestart: false,
+    default: {},
+    description: 'Notification preferences.',
+    showInDialog: false,
+    properties: {
+      ttsEnabled: {
+        type: 'boolean',
+        label: 'Enable TTS Notifications',
+        category: 'General',
+        requiresRestart: false,
+        default: true,
+        description:
+          'Allow the CLI to run termux-tts-speak for job summaries. Disable to block TTS commands.',
+        showInDialog: true,
+      },
+    },
+  },
   output: {
     type: 'object',
     label: 'Output',
@@ -875,6 +896,134 @@ const SETTINGS_SCHEMA = {
             default: false,
             description: 'Disable fuzzy search when searching for files.',
             showInDialog: true,
+          },
+        },
+      },
+      contextMemory: {
+        type: 'object',
+        label: 'Context Memory',
+        category: 'Context',
+        requiresRestart: false,
+        default: {},
+        description: oneLine`
+          Configure JSON-based context memory (base/user/journal) in ~/.gemini/context_memory.
+          Enabled by default; primary controls ordering against GEMINI.md.
+        `,
+        // Hide container row; show children instead to avoid [object Object]
+        showInDialog: false,
+        properties: {
+          enabled: {
+            type: 'boolean',
+            label: 'Enable Context Memory',
+            category: 'Context',
+            requiresRestart: false,
+            default: true,
+            description: 'Toggle JSON context memory (base/user/journal).',
+            showInDialog: true,
+          },
+          allowBaseWrite: {
+            type: 'boolean',
+            label: 'Allow Base Memory Writes',
+            category: 'Context',
+            requiresRestart: false,
+            default: false,
+            description:
+              'Permit writing to base.json when explicitly requested. Keeps read-only by default.',
+            showInDialog: true,
+          },
+          primary: {
+            type: 'enum',
+            label: 'Primary Memory',
+            category: 'Context',
+            requiresRestart: false,
+            default: 'gemini' as const,
+            options: [
+              { label: 'GEMINI.md', value: 'gemini' },
+              { label: 'JSON Base', value: 'jsonBase' },
+              { label: 'JSON User', value: 'jsonUser' },
+            ],
+            description:
+              'Memory source to load first (ordering then falls back to the others).',
+            showInDialog: true,
+          },
+          autoLoad: {
+            type: 'object',
+            label: 'Auto Load',
+            category: 'Context',
+            requiresRestart: false,
+            default: {},
+            description:
+              'Select which memory sources load automatically at session start.',
+            showInDialog: false,
+            properties: {
+              gemini: {
+                type: 'boolean',
+                label: 'Auto-load GEMINI.md',
+                category: 'Context',
+                requiresRestart: false,
+                default: true,
+                description:
+                  'Load GEMINI.md (primary file list) when starting a session.',
+                showInDialog: true,
+              },
+              jsonBase: {
+                type: 'boolean',
+                label: 'Auto-load JSON Base',
+                category: 'Context',
+                requiresRestart: false,
+                default: true,
+                description: 'Load base.json (read-only) automatically.',
+                showInDialog: true,
+              },
+              jsonUser: {
+                type: 'boolean',
+                label: 'Auto-load JSON User',
+                category: 'Context',
+                requiresRestart: false,
+                default: true,
+                description: 'Load user.json (writable) automatically.',
+                showInDialog: true,
+              },
+            },
+          },
+          paths: {
+            type: 'object',
+            label: 'Paths (read-only)',
+            category: 'Context',
+            requiresRestart: false,
+            default: {},
+            description:
+              'Filesystem locations for context memory files. Change manually if needed.',
+            showInDialog: false,
+            properties: {
+              base: {
+                type: 'string',
+                label: 'Base Path',
+                category: 'Context',
+                requiresRestart: false,
+                default: '',
+                description: 'Path to base.json (read-only).',
+                showInDialog: false,
+              },
+              user: {
+                type: 'string',
+                label: 'User Path',
+                category: 'Context',
+                requiresRestart: false,
+                default: '',
+                description: 'Path to user.json (writable).',
+                showInDialog: false,
+              },
+              journal: {
+                type: 'string',
+                label: 'Journal Path',
+                category: 'Context',
+                requiresRestart: false,
+                default: '',
+                description: 'Path to user.journal.jsonl (append-only).',
+                showInDialog: false,
+              },
+            },
           },
         },
       },

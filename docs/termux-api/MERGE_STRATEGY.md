@@ -37,7 +37,8 @@ gemini-cli-termux/
 ├── packages/core/src/
 │   ├── utils/
 │   │   └── termux-detect.ts     # NEW - no conflicts
-│   └── index.ts                  # Minimal EDIT - 1 export line
+│   │   └── contextMemory.ts     # NEW - Termux context memory logic
+│   └── index.ts                  # Minimal EDIT - 2 export lines
 ├── scripts/
 │   ├── postinstall.js           # NEW - no conflicts
 │   ├── termux-setup.sh          # NEW - no conflicts
@@ -45,7 +46,7 @@ gemini-cli-termux/
 │       ├── discovery.sh
 │       └── call.sh
 ├── esbuild.config.js            # EDIT - banner (isolated)
-├── package.json                 # EDIT - scripts.postinstall
+├── package.json                 # EDIT - scripts.postinstall, dist-tags
 └── Makefile                     # EDIT - additional targets
 ```
 
@@ -155,6 +156,19 @@ if (process.platform === 'android' && process.env.PREFIX && !process.env.TERMUX_
 
 // TERMUX PATCH
 export * from './utils/termux-detect.js';
+export * from './utils/contextMemory.js';
+
+### Context memory safety
+
+- Keep `contextMemory.ts` additive; if upstream adds similar logic, retain
+  Termux fields `allowBaseWrite`, runtime setters, key/TTL guards, sensitivity
+  filter, and incremental journal processing.
+
+### Shell / TTS guard
+
+- `packages/core/src/tools/shell.ts` contains a guard to block
+  `termux-tts-speak` when `notifications.ttsEnabled` is false. Re-apply after
+  merges if the shell tool changes.
 ```
 
 ---

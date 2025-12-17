@@ -17,6 +17,25 @@ import { loadWasmBinary } from './fileUtils.js';
 
 export const SHELL_TOOL_NAMES = ['run_shell_command', 'ShellTool'];
 
+// Polyfill for environments (Node/Termux) missing Uint8Array.fromBase64 / toBase64
+function ensureBase64Polyfill() {
+  if (
+    !(Uint8Array as unknown as { fromBase64?: (s: string) => Uint8Array })
+      .fromBase64
+  ) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (Uint8Array as any).fromBase64 = (str: string): Uint8Array =>
+      Uint8Array.from(Buffer.from(str, 'base64'));
+  }
+  if (!Uint8Array.prototype.toBase64) {
+     
+    Uint8Array.prototype.toBase64 = function (): string {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return Buffer.from(this as any).toString('base64');
+    };
+  }
+}
+
 /**
  * An identifier for the shell type.
  */
@@ -61,6 +80,7 @@ function toError(value: unknown): Error {
 
 async function loadBashLanguage(): Promise<void> {
   try {
+    ensureBase64Polyfill();
     treeSitterInitializationError = null;
     const [treeSitterBinary, bashBinary] = await Promise.all([
       loadWasmBinary(

@@ -1,4 +1,4 @@
-# 🧪 Gemini CLI Termux Test Suite (v0.22.1-termux)
+# 🧪 Gemini CLI Termux Test Suite (v0.22.3-termux)
 
 **Goal**: Validate the Termux build without native deps
 (node-pty/keytar/tree-sitter). Run from a clean shell on Termux ARM64.
@@ -10,7 +10,7 @@
 
 ## 1. Version & Env
 
-1.1 `gemini --version` → shows `0.22.1-termux` 1.2 `node -v`, `uname -m`,
+1.1 `gemini --version` → shows `0.22.3-termux` 1.2 `node -v`, `uname -m`,
 `echo $PREFIX` (expect Termux paths / aarch64)
 
 ## 2. CLI Basics
@@ -38,7 +38,7 @@ _Feature not currently available in this build._
 ## 7. File ops (Termux safe)
 
 7.1 `echo hi > file.txt` then `gemini -o json "read file.txt"` contains "hi" 7.2
-`gemini -o json "list files"` lists current dir
+`gemini -o json "ls"` lists current dir
 
 ## 8. Termux specifics
 
@@ -49,7 +49,7 @@ _Feature not currently available in this build._
 ## 9. Package/binary
 
 9.1 `ls $(npm root -g)/@mmmbuto/gemini-cli-termux/bundle/gemini.js` exists 9.2
-`node bundle/gemini.js --version` (from repo) prints 0.22.1-termux
+`node bundle/gemini.js --version` (from repo) prints 0.22.3-termux
 
 ## 10. Known limits (assert graceful handling)
 
@@ -76,6 +76,31 @@ returns `true`
 
 - `make termux-install` runs without error
 - `scripts/termux-setup.sh` completes successfully
+
+## 12. Context Memory (New v0.22.3)
+
+12.1 **Bootstrap from GEMINI.md**  
+Create `~/.gemini/GEMINI.md` with a short line, delete
+`~/.gemini/context_memory/user.json`, run `gemini --version` (or start session)
+→ verify `user.json` created with that line mirrored.
+
+12.2 **Autoload toggles**  
+In `/settings`, ensure `Context Memory` options show enabled, primary =
+`GEMINI.md`, and auto-load flags all true. Toggle `Auto-load JSON Base` off,
+restart CLI → `memory` summary should omit `base.json` path.
+
+12.3 **Journal mirror**  
+Run `/save_memory "remember this fact"` in interactive mode → check
+`~/.gemini/context_memory/user.journal.jsonl` appended with one record;
+`user.json` remains compact (≤200 entries).
+
+12.4 **Primary ordering**  
+Set primary to `JSON User`, restart, run `/memory` → JSON user block appears
+before GEMINI.md in the displayed context list.
+
+12.5 **Read-only base toggle**  
+With `Allow Base Memory Writes` OFF, `/save_memory {"target":"base"}` should
+fail; turn it ON then retry and see entry in `base.json`.
 
 ## Expected Outcome
 

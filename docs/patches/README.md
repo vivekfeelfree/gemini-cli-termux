@@ -1,4 +1,4 @@
-# Termux Patches (0.22.1-termux)
+# Termux Patches (0.22.3-termux)
 
 Minimal changes to run `gemini-cli` on Android/Termux ARM64 without native deps.
 
@@ -8,14 +8,17 @@ Minimal changes to run `gemini-cli` on Android/Termux ARM64 without native deps.
    `$PREFIX` so clipboardy detects Termux correctly.
 2. **Optional native modules** – Leave `node-pty`, `keytar`, `tree-sitter-bash`
    in `optionalDependencies`; build failures are tolerated.
-3. **Core exports** – `packages/core/src/index.ts` re-exports stdio utilities
-   and hook/telemetry APIs so CLI bundling succeeds on Termux.
+3. **Core exports** – `packages/core/src/index.ts` re-exports stdio utilities,
+   hook/telemetry APIs, Termux detectors, and context-memory helpers so CLI
+   bundling succeeds on Termux.
 4. **Bundle** – Prebuilt `bundle/gemini.js` shipped in npm package
    (ARM64/Android) with policy files under `bundle/policies/`.
 5. **is-in-ci override** – Prevents ink from detecting Termux as CI.
 6. **Punycode warning** – Suppresses deprecation warning on Android.
 7. **Termux detection** – `packages/core/src/utils/termux-detect.ts` utility.
 8. **Postinstall message** – Clear success message on Termux install.
+9. **Context memory toggles** – Settings for base write enablement and TTS
+   notifications; base writes gated at tool level for merge safety.
 
 ## New in 0.22.1
 
