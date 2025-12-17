@@ -6,20 +6,20 @@
 
 ## Overview
 
-Questa guida spiega come configurare il Tool Discovery per esporre i comandi
-Termux-API a Gemini CLI senza modificare il codice core.
+This guide explains how to set up Tool Discovery to expose Termux-API commands
+to Gemini CLI without modifying the core code.
 
 ## Prerequisites
 
-1. Termux con termux-api package installato:
+1. Termux with termux-api package installed:
 
    ```bash
    pkg install termux-api
    ```
 
-2. App Termux:API installata da F-Droid
+2. Termux:API App installed from F-Droid
 
-3. Gemini CLI funzionante:
+3. Working Gemini CLI:
    ```bash
    gemini --version
    ```
@@ -28,13 +28,13 @@ Termux-API a Gemini CLI senza modificare il codice core.
 
 ## Quick Setup
 
-### 1. Creare directory config
+### 1. Create config directory
 
 ```bash
 mkdir -p ~/.config/gemini/termux-tools
 ```
 
-### 2. Creare script discovery
+### 2. Create discovery script
 
 ```bash
 cat > ~/.config/gemini/termux-tools/discovery.sh << 'SCRIPT'
@@ -381,7 +381,7 @@ SCRIPT
 chmod +x ~/.config/gemini/termux-tools/discovery.sh
 ```
 
-### 3. Creare script call
+### 3. Create call script
 
 ```bash
 cat > ~/.config/gemini/termux-tools/call.sh << 'SCRIPT'
@@ -587,9 +587,9 @@ SCRIPT
 chmod +x ~/.config/gemini/termux-tools/call.sh
 ```
 
-### 4. Configurare Gemini CLI
+### 4. Configure Gemini CLI
 
-Modifica `~/.config/gemini/settings.json`:
+Edit `~/.config/gemini/settings.json`:
 
 ```json
 {
@@ -601,19 +601,19 @@ Modifica `~/.config/gemini/settings.json`:
 ### 5. Test
 
 ```bash
-# Verifica discovery
+# Verify discovery
 ~/.config/gemini/termux-tools/discovery.sh | jq '.[] | .name'
 
-# Verifica call
+# Verify call
 echo '{}' | ~/.config/gemini/termux-tools/call.sh termux_battery_status
 
-# Test con Gemini
-gemini "Qual è lo stato della batteria?"
+# Test with Gemini
+gemini "What's my battery status?"
 ```
 
 ---
 
-## Verifica Installazione
+## Installation Verification
 
 ```bash
 # Check Termux-API
@@ -630,13 +630,13 @@ termux-setup-storage  # Grant storage access
 
 ## Troubleshooting
 
-### Tool non trovato
+### Tool not found
 
 ```
 Error: Unknown tool: termux_xxx
 ```
 
-**Soluzione**: Verificare che il tool sia definito in `discovery.sh` e `call.sh`
+**Solution**: Verify that the tool is defined in `discovery.sh` and `call.sh`
 
 ### Permission denied
 
@@ -644,7 +644,7 @@ Error: Unknown tool: termux_xxx
 Error: Permission denied for termux-xxx
 ```
 
-**Soluzione**: Aprire app Termux:API e concedere permessi necessari
+**Solution**: Open Termux:API app and grant necessary permissions
 
 ### JSON parse error
 
@@ -652,18 +652,18 @@ Error: Permission denied for termux-xxx
 Error: jq: parse error
 ```
 
-**Soluzione**: Verificare che i parametri siano JSON valido
+**Solution**: Verify that parameters are valid JSON
 
 ---
 
-## Estendere
+## Extending
 
-Per aggiungere nuovi comandi:
+To add new commands:
 
-1. Aggiungere FunctionDeclaration in `discovery.sh`
-2. Aggiungere case handler in `call.sh`
-3. Testare con chiamata diretta
-4. Verificare con Gemini
+1. Add FunctionDeclaration in `discovery.sh`
+2. Add case handler in `call.sh`
+3. Test with direct call
+4. Verify with Gemini
 
 ---
 

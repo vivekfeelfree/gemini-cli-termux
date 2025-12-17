@@ -7,24 +7,24 @@
 
 ## Executive Summary
 
-Questo documento descrive il piano per integrare i comandi nativi Termux-API nel
-fork `gemini-cli-termux`, permettendo a Gemini CLI di sfruttare le API hardware
-e software di Android attraverso Termux.
+This document describes the plan to integrate native Termux-API commands into
+the `gemini-cli-termux` fork, allowing Gemini CLI to leverage Android hardware
+and software APIs through Termux.
 
 ## Table of Contents
 
-1. [Architettura Attuale](#architettura-attuale)
-2. [Comandi Termux-API](#comandi-termux-api)
-3. [Approcci di Integrazione](#approcci-di-integrazione)
-4. [Raccomandazione](#raccomandazione)
-5. [Roadmap Implementazione](#roadmap-implementazione)
-6. [File di Riferimento](#file-di-riferimento)
+1. [Current Architecture](#current-architecture)
+2. [Termux-API Commands](#termux-api-commands)
+3. [Integration Approaches](#integration-approaches)
+4. [Recommendation](#recommendation)
+5. [Implementation Roadmap](#implementation-roadmap)
+6. [Reference Files](#reference-files)
 
 ---
 
-## Architettura Attuale
+## Current Architecture
 
-### Struttura Monorepo
+### Monorepo Structure
 
 ```
 gemini-cli-termux/
@@ -40,63 +40,63 @@ gemini-cli-termux/
 └── bundle/             # Built executable
 ```
 
-### Sistema Tool
+### Tool System
 
-I tools in Gemini CLI seguono un pattern ben definito:
+Tools in Gemini CLI follow a well-defined pattern:
 
-1. **BaseDeclarativeTool**: Classe base per definire tools
-2. **BaseToolInvocation**: Classe per l'esecuzione del tool
-3. **ToolRegistry**: Registra e gestisce tutti i tools
+1. **BaseDeclarativeTool**: Base class for defining tools
+2. **BaseToolInvocation**: Class for tool execution
+3. **ToolRegistry**: Registers and manages all tools
 
-**File chiave**:
+**Key files**:
 
-- `packages/core/src/tools/tools.ts` - Interfacce e classi base
-- `packages/core/src/tools/tool-registry.ts` - Registry dei tools
-- `packages/core/src/tools/shell.ts` - Esempio: ShellTool
+- `packages/core/src/tools/tools.ts` - Interfaces and base classes
+- `packages/core/src/tools/tool-registry.ts` - Tool registry
+- `packages/core/src/tools/shell.ts` - Example: ShellTool
 
-### Flusso Tool Call
+### Tool Call Flow
 
 ```
 LLM → ToolRegistry.getTool() → DeclarativeTool.build() → ToolInvocation.execute()
 ```
 
-### Meccanismi di Discovery
+### Discovery Mechanisms
 
-1. **Built-in Tools**: Registrati manualmente nel registry
+1. **Built-in Tools**: Manually registered in the registry
 2. **Discovered Tools**: Via `tool_discovery_command` in config
 3. **MCP Tools**: Via Model Context Protocol servers
 
 ---
 
-## Comandi Termux-API
+## Termux-API Commands
 
-### Categorizzazione per Funzionalità
+### Categorization by Functionality
 
-| Categoria          | Comandi                                                                                                  | Complessità     |
+| Category           | Commands                                                                                                 | Complexity      |
 | ------------------ | -------------------------------------------------------------------------------------------------------- | --------------- |
-| **System Info**    | battery-status, audio-info, wifi-connectioninfo, wifi-scaninfo, telephony-deviceinfo, telephony-cellinfo | Bassa           |
-| **Notifications**  | notification, notification-remove, notification-list, toast                                              | Bassa           |
-| **Clipboard**      | clipboard-get, clipboard-set                                                                             | Bassa           |
-| **Media**          | camera-photo, camera-info, microphone-record, media-player, media-scan, tts-speak, speech-to-text        | Media           |
-| **Location**       | location                                                                                                 | Media           |
-| **Sensors**        | sensor, infrared-frequencies, infrared-transmit, torch, vibrate, brightness                              | Media           |
-| **Communication**  | sms-send, sms-inbox, sms-list, telephony-call, call-log, contact-list                                    | Alta (privacy)  |
-| **Storage**        | storage-get, download, share, open, open-url, saf-\*                                                     | Media           |
-| **Security**       | fingerprint, keystore                                                                                    | Alta (security) |
-| **System Control** | volume, wake-lock, wake-unlock, wallpaper, wifi-enable                                                   | Media           |
-| **Dialogs**        | dialog                                                                                                   | Media           |
-| **NFC**            | nfc                                                                                                      | Alta            |
-| **USB**            | usb                                                                                                      | Alta            |
-| **Job Scheduler**  | job-scheduler                                                                                            | Media           |
+| **System Info**    | battery-status, audio-info, wifi-connectioninfo, wifi-scaninfo, telephony-deviceinfo, telephony-cellinfo | Low             |
+| **Notifications**  | notification, notification-remove, notification-list, toast                                              | Low             |
+| **Clipboard**      | clipboard-get, clipboard-set                                                                             | Low             |
+| **Media**          | camera-photo, camera-info, microphone-record, media-player, media-scan, tts-speak, speech-to-text        | Medium          |
+| **Location**       | location                                                                                                 | Medium          |
+| **Sensors**        | sensor, infrared-frequencies, infrared-transmit, torch, vibrate, brightness                              | Medium          |
+| **Communication**  | sms-send, sms-inbox, sms-list, telephony-call, call-log, contact-list                                    | High (privacy)  |
+| **Storage**        | storage-get, download, share, open, open-url, saf-\*                                                     | Medium          |
+| **Security**       | fingerprint, keystore                                                                                    | High (security) |
+| **System Control** | volume, wake-lock, wake-unlock, wallpaper, wifi-enable                                                   | Medium          |
+| **Dialogs**        | dialog                                                                                                   | Medium          |
+| **NFC**            | nfc                                                                                                      | High            |
+| **USB**            | usb                                                                                                      | High            |
+| **Job Scheduler**  | job-scheduler                                                                                            | Medium          |
 
-### Comandi Prioritari (Fase 1)
+### Priority Commands (Phase 1)
 
-1. **termux-battery-status** - Info batteria (JSON output)
+1. **termux-battery-status** - Battery info (JSON output)
 2. **termux-clipboard-get/set** - Clipboard operations
-3. **termux-toast** - Notifiche toast
-4. **termux-notification** - Notifiche persistenti
+3. **termux-toast** - Toast notifications
+4. **termux-notification** - Persistent notifications
 5. **termux-tts-speak** - Text-to-Speech
-6. **termux-vibrate** - Feedback tattile
+6. **termux-vibrate** - Haptic feedback
 7. **termux-torch** - Flashlight control
 8. **termux-location** - GPS location
 9. **termux-wifi-connectioninfo** - Network info
@@ -104,14 +104,14 @@ LLM → ToolRegistry.getTool() → DeclarativeTool.build() → ToolInvocation.ex
 
 ---
 
-## Approcci di Integrazione
+## Integration Approaches
 
-### Approccio A: Tools Nativi Dedicati
+### Approach A: Native Dedicated Tools
 
-**Descrizione**: Creare classi TypeScript dedicate per ogni categoria di comandi
-Termux.
+**Description**: Create dedicated TypeScript classes for each category of Termux
+commands.
 
-**Struttura proposta**:
+**Proposed Structure**:
 
 ```
 packages/core/src/tools/termux/
@@ -126,30 +126,30 @@ packages/core/src/tools/termux/
 └── termux-storage.ts     # download, share, open
 ```
 
-**Pro**:
+**Pros**:
 
-- Integrazione profonda con Gemini
-- Validazione parametri type-safe
-- Descrizioni ottimizzate per LLM
-- Gestione errori specifica
-- Conferma utente granulare
+- Deep integration with Gemini
+- Type-safe parameter validation
+- LLM-optimized descriptions
+- Specific error handling
+- Granular user confirmation
 
-**Contro**:
+**Cons**:
 
-- Molto codice da scrivere (~50 tools)
-- Manutenzione ongoing
-- Accoppiamento forte
+- Much code to write (~50 tools)
+- Ongoing maintenance
+- Strong coupling
 
-**Effort stimato**: Alto (2-3 settimane)
+**Estimated Effort**: High (2-3 weeks)
 
 ---
 
-### Approccio B: MCP Server per Termux-API
+### Approach B: MCP Server for Termux-API
 
-**Descrizione**: Creare un MCP server standalone che espone tutti i comandi
-Termux come tools MCP.
+**Description**: Create a standalone MCP server that exposes all Termux commands
+as MCP tools.
 
-**Struttura proposta**:
+**Proposed Structure**:
 
 ```
 termux-mcp-server/
@@ -161,7 +161,7 @@ termux-mcp-server/
 └── README.md
 ```
 
-**Configurazione**:
+**Configuration**:
 
 ```json
 // settings.json
@@ -175,30 +175,30 @@ termux-mcp-server/
 }
 ```
 
-**Pro**:
+**Pros**:
 
-- Riutilizzabile con altri client MCP
-- Separazione delle responsabilità
-- Facile da aggiornare indipendentemente
-- Standard MCP ampiamente supportato
-- Pubblicabile su npm separatamente
+- Reusable with other MCP clients
+- Separation of concerns
+- Easy to update independently
+- Widely supported MCP standard
+- Publishable to npm separately
 
-**Contro**:
+**Cons**:
 
-- Overhead di comunicazione
-- Dipendenza processo separato
-- Debugging più complesso
+- Communication overhead
+- Separate process dependency
+- More complex debugging
 
-**Effort stimato**: Medio (1-2 settimane)
+**Estimated Effort**: Medium (1-2 weeks)
 
 ---
 
-### Approccio C: Tool Discovery Script
+### Approach C: Tool Discovery Script
 
-**Descrizione**: Creare uno script che genera FunctionDeclarations per i comandi
-Termux, sfruttando il meccanismo di tool discovery esistente.
+**Description**: Create a script that generates FunctionDeclarations for Termux
+commands, leveraging the existing tool discovery mechanism.
 
-**Implementazione**:
+**Implementation**:
 
 ```bash
 # termux-tool-discovery.sh
@@ -218,7 +218,7 @@ cat << 'EOF'
 EOF
 ```
 
-**Configurazione**:
+**Configuration**:
 
 ```json
 // settings.json
@@ -228,29 +228,28 @@ EOF
 }
 ```
 
-**Pro**:
+**Pros**:
 
-- Sfrutta infrastruttura esistente
-- Zero modifiche al core
-- Configurabile per utente
-- Facile da estendere
+- Leverages existing infrastructure
+- Zero core modifications
+- User configurable
+- Easy to extend
 
-**Contro**:
+**Cons**:
 
-- Meno controllo sulla validazione
-- Dipende da script esterni
-- Gestione errori limitata
+- Less control over validation
+- Depends on external scripts
+- Limited error handling
 
-**Effort stimato**: Basso (3-5 giorni)
+**Estimated Effort**: Low (3-5 days)
 
 ---
 
-### Approccio D: Shell Allowlist Extension
+### Approach D: Shell Allowlist Extension
 
-**Descrizione**: Estendere le shell permissions per auto-approvare comandi
-`termux-*`.
+**Description**: Extend shell permissions to auto-approve `termux-*` commands.
 
-**Implementazione**:
+**Implementation**:
 
 ```typescript
 // packages/core/src/utils/shell-permissions.ts
@@ -266,71 +265,71 @@ export function isTermuxCommand(command: string): boolean {
 }
 ```
 
-**Pro**:
+**Pros**:
 
-- Impatto minimo sul codice
-- Usa ShellTool esistente
+- Minimal code impact
+- Uses existing ShellTool
 - Quick win
 
-**Contro**:
+**Cons**:
 
-- Nessuna semantica aggiuntiva
-- LLM deve conoscere la sintassi
-- Nessuna validazione parametri
-- Nessuna descrizione per LLM
+- No additional semantics
+- LLM must know the syntax
+- No parameter validation
+- No description for LLM
 
-**Effort stimato**: Minimo (1-2 giorni)
-
----
-
-### Approccio E: Ibrido (Raccomandato)
-
-**Descrizione**: Combinare gli approcci B e C per massima flessibilità.
-
-**Fase 1**: Tool Discovery Script (quick win)
-
-- Genera dichiarazioni per tutti i comandi
-- Permette a Gemini di usare Termux immediatamente
-
-**Fase 2**: MCP Server (produzione)
-
-- Implementa server MCP completo
-- Validazione robusta
-- Pubblicabile su npm
-
-**Fase 3**: Tools Nativi (opzionale)
-
-- Solo per comandi critici/frequenti
-- Integrazione ottimizzata
+**Estimated Effort**: Minimal (1-2 days)
 
 ---
 
-## Raccomandazione
+### Approach E: Hybrid (Recommended)
 
-**Approccio consigliato: E (Ibrido)**
+**Description**: Combine approaches B and C for maximum flexibility.
 
-### Motivazioni
+**Phase 1**: Tool Discovery Script (quick win)
 
-1. **Quick Win**: Tool Discovery permette di iniziare subito
-2. **Scalabilità**: MCP Server è lo standard per estensioni
-3. **Flessibilità**: Tools nativi solo dove serve
-4. **Manutenibilità**: Ogni fase può essere sviluppata indipendentemente
+- Generates declarations for all commands
+- Allows Gemini to use Termux immediately
 
-### Priorità Implementazione
+**Phase 2**: MCP Server (production)
 
-| Fase | Approccio        | Comandi                         | Priorità |
-| ---- | ---------------- | ------------------------------- | -------- |
-| 1    | Discovery Script | Tutti                           | Alta     |
-| 2    | MCP Server       | System, Clipboard, Notification | Media    |
-| 3    | Native Tools     | TTS, Location                   | Bassa    |
+- Implements complete MCP server
+- Robust validation
+- Publishable to npm
+
+**Phase 3**: Native Tools (optional)
+
+- Only for critical/frequent commands
+- Optimized integration
 
 ---
 
-## Roadmap Implementazione
+## Recommendation
 
-### Fase 1: Tool Discovery (Quick Win)
+**Recommended Approach: E (Hybrid)**
 
-**Files da creare**:
+### Rationale
+
+1. **Quick Win**: Tool Discovery allows starting immediately
+2. **Scalability**: MCP Server is the standard for extensions
+3. **Flexibility**: Native tools only where needed
+4. **Maintainability**: Each phase can be developed independently
+
+### Implementation Priority
+
+| Phase | Approach         | Commands                        | Priority |
+| ----- | ---------------- | ------------------------------- | -------- |
+| 1     | Discovery Script | All                             | High     |
+| 2     | MCP Server       | System, Clipboard, Notification | Medium   |
+| 3     | Native Tools     | TTS, Location                   | Low      |
+
+---
+
+## Implementation Roadmap
+
+### Phase 1: Tool Discovery (Quick Win)
+
+**Files to create**:
 
 - `scripts/termux-tool-discovery.sh`
 - `scripts/termux-tool-call.sh`
@@ -338,79 +337,79 @@ export function isTermuxCommand(command: string): boolean {
 
 **Tasks**:
 
-1. [ ] Creare script discovery con tutte le FunctionDeclarations
-2. [ ] Creare script call con dispatch dei comandi
-3. [ ] Documentare configurazione utente
-4. [ ] Test su Termux
-5. [ ] Aggiornare README
+1. [ ] Create discovery script with all FunctionDeclarations
+2. [ ] Create call script with command dispatch
+3. [ ] Document user configuration
+4. [ ] Test on Termux
+5. [ ] Update README
 
-### Fase 2: MCP Server
+### Phase 2: MCP Server
 
-**Files da creare**:
+**Files to create**:
 
-- Nuovo package `packages/termux-mcp/`
-- O repository separato `termux-mcp-server`
+- New package `packages/termux-mcp/`
+- Or separate repository `termux-mcp-server`
 
 **Tasks**:
 
 1. [ ] Scaffold MCP server
-2. [ ] Implementare tools System (battery, wifi, audio)
-3. [ ] Implementare tools Clipboard
-4. [ ] Implementare tools Notification
-5. [ ] Implementare tools Media
+2. [ ] Implement System tools (battery, wifi, audio)
+3. [ ] Implement Clipboard tools
+4. [ ] Implement Notification tools
+5. [ ] Implement Media tools
 6. [ ] Test integration
-7. [ ] Pubblicare su npm
+7. [ ] Publish to npm
 
-### Fase 3: Native Tools (Opzionale)
+### Phase 3: Native Tools (Optional)
 
-**Files da modificare**:
+**Files to modify**:
 
-- `packages/core/src/tools/` - Nuovi tool files
+- `packages/core/src/tools/` - New tool files
 - `packages/core/src/index.ts` - Export tools
 
 **Tasks**:
 
-1. [ ] Implementare TermuxTTSTool
-2. [ ] Implementare TermuxLocationTool
-3. [ ] Implementare TermuxClipboardTool
-4. [ ] Registrare tools in registry
-5. [ ] Test e documentazione
+1. [ ] Implement TermuxTTSTool
+2. [ ] Implement TermuxLocationTool
+3. [ ] Implement TermuxClipboardTool
+4. [ ] Register tools in registry
+5. [ ] Test and documentation
 
 ---
 
-## File di Riferimento
+## Reference Files
 
-### Architettura Core
+### Core Architecture
 
-| File                                       | Descrizione           |
-| ------------------------------------------ | --------------------- |
-| `packages/core/src/tools/tools.ts`         | Interfacce base tools |
-| `packages/core/src/tools/tool-registry.ts` | Registry e discovery  |
-| `packages/core/src/tools/shell.ts`         | Esempio ShellTool     |
-| `packages/core/src/tools/mcp-tool.ts`      | MCP tool wrapper      |
-| `packages/core/src/tools/mcp-client.ts`    | MCP client            |
+| File                                       | Description            |
+| ------------------------------------------ | ---------------------- |
+| `packages/core/src/tools/tools.ts`         | Base tool interfaces   |
+| `packages/core/src/tools/tool-registry.ts` | Registry and discovery |
+| `packages/core/src/tools/shell.ts`         | Example ShellTool      |
+| `packages/core/src/tools/mcp-tool.ts`      | MCP tool wrapper       |
+| `packages/core/src/tools/mcp-client.ts`    | MCP client             |
 
-### Configurazione
+### Configuration
 
-| File                                   | Descrizione     |
+| File                                   | Description     |
 | -------------------------------------- | --------------- |
 | `packages/core/src/config/config.ts`   | Config loader   |
 | `packages/core/src/config/settings.ts` | Settings schema |
 
-### Documentazione Esistente
+### Existing Documentation
 
-| File             | Descrizione       |
-| ---------------- | ----------------- |
-| `docs/TERMUX.md` | Setup Termux      |
-| `README.md`      | Overview progetto |
+| File             | Description      |
+| ---------------- | ---------------- |
+| `docs/TERMUX.md` | Setup Termux     |
+| `README.md`      | Project Overview |
 
 ---
 
-## Appendici
+## Appendices
 
-- [COMMANDS.md](./COMMANDS.md) - Dettaglio tutti i comandi Termux-API
-- [DISCOVERY_SETUP.md](./DISCOVERY_SETUP.md) - Guida setup Tool Discovery
-- [MCP_SERVER.md](./MCP_SERVER.md) - Specifiche MCP Server
+- [COMMANDS.md](./COMMANDS.md) - Termux-API commands detail
+- [DISCOVERY_SETUP.md](./DISCOVERY_SETUP.md) - Tool Discovery setup guide
+- [MCP_SERVER.md](./MCP_SERVER.md) - MCP Server specifications
 
 ---
 

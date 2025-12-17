@@ -1,27 +1,26 @@
 # Termux-API Commands Reference
 
-**Completeness**: 100% dei comandi Termux-API documentati **Date**: 2025-12-17
+**Completeness**: 100% of Termux-API commands documented **Date**: 2025-12-17
 
 ---
 
 ## Overview
 
-Questa guida documenta tutti i comandi Termux-API disponibili, con parametri,
-output atteso e priorità di integrazione.
+This guide documents all available Termux-API commands, with parameters,
+expected output, and integration priority.
 
-**Prerequisito**: `pkg install termux-api` + App Termux:API installata da
+**Prerequisite**: `pkg install termux-api` + Termux:API App installed from
 F-Droid
 
 ---
 
-## Comandi per Categoria
+## Commands by Category
 
 ### 1. System Information
 
 #### termux-battery-status
 
-**Descrizione**: Stato batteria del dispositivo **Parametri**: Nessuno
-**Output**: JSON
+**Description**: Device battery status **Parameters**: None **Output**: JSON
 
 ```json
 {
@@ -34,50 +33,50 @@ F-Droid
 }
 ```
 
-**Priorità**: ALTA **Note**: Utile per automazioni basate su batteria
+**Priority**: HIGH **Notes**: Useful for battery-based automation
 
 ---
 
 #### termux-audio-info
 
-**Descrizione**: Informazioni audio device **Parametri**: Nessuno **Output**:
-JSON con stato speaker/bluetooth/headset **Priorità**: MEDIA
+**Description**: Audio device information **Parameters**: None **Output**: JSON
+with speaker/bluetooth/headset status **Priority**: MEDIUM
 
 ---
 
 #### termux-wifi-connectioninfo
 
-**Descrizione**: Info connessione WiFi attuale **Parametri**: Nessuno
-**Output**: JSON con SSID, BSSID, IP, link_speed, rssi **Priorità**: ALTA
+**Description**: Current WiFi connection info **Parameters**: None **Output**:
+JSON with SSID, BSSID, IP, link_speed, rssi **Priority**: HIGH
 
 ---
 
 #### termux-wifi-scaninfo
 
-**Descrizione**: Scan reti WiFi disponibili **Parametri**: Nessuno **Output**:
-JSON array delle reti **Priorità**: BASSA
+**Description**: Scan available WiFi networks **Parameters**: None **Output**:
+JSON array of networks **Priority**: LOW
 
 ---
 
 #### termux-telephony-deviceinfo
 
-**Descrizione**: Info dispositivo telefonico **Parametri**: Nessuno **Output**:
-JSON con IMEI, network_operator, sim_state, etc. **Priorità**: MEDIA
-**Privacy**: Contiene dati sensibili
+**Description**: Telephony device info **Parameters**: None **Output**: JSON
+with IMEI, network_operator, sim_state, etc. **Priority**: MEDIUM **Privacy**:
+Contains sensitive data
 
 ---
 
 #### termux-telephony-cellinfo
 
-**Descrizione**: Info celle telefoniche **Parametri**: Nessuno **Output**: JSON
-con info torre cellulare **Priorità**: BASSA
+**Description**: Cellular cell info **Parameters**: None **Output**: JSON with
+cell tower info **Priority**: LOW
 
 ---
 
 #### termux-info
 
-**Descrizione**: Info sistema Termux **Parametri**: Nessuno **Output**: Testo
-con versioni e path **Priorità**: ALTA (debug)
+**Description**: Termux system info **Parameters**: None **Output**: Text with
+versions and paths **Priority**: HIGH (debug)
 
 ---
 
@@ -85,19 +84,19 @@ con versioni e path **Priorità**: ALTA (debug)
 
 #### termux-toast
 
-**Descrizione**: Mostra toast message **Parametri**:
+**Description**: Show toast message **Parameters**:
 
 - `-s` short duration
 - `-g gravity` (top, middle, bottom)
 - `-c color` background
-- `-C color` text color **Input**: Testo da stdin o argomento **Output**:
-  Nessuno **Priorità**: ALTA **Esempio**: `echo "Hello" | termux-toast -g top`
+- `-C color` text color **Input**: Text from stdin or argument **Output**: None
+  **Priority**: HIGH **Example**: `echo "Hello" | termux-toast -g top`
 
 ---
 
 #### termux-notification
 
-**Descrizione**: Crea notifica persistente **Parametri**:
+**Description**: Create persistent notification **Parameters**:
 
 - `-t title`
 - `-c content`
@@ -118,22 +117,22 @@ con versioni e path **Priorità**: ALTA (debug)
 - `--group group_name`
 - `--alert-once`
 - `--ongoing`
-- `--image-path path` **Output**: Nessuno **Priorità**: ALTA **Esempio**:
+- `--image-path path` **Output**: None **Priority**: HIGH **Example**:
   `termux-notification -t "Title" -c "Content" --id mynotif`
 
 ---
 
 #### termux-notification-remove
 
-**Descrizione**: Rimuove notifica **Parametri**: `--id notification_id`
-**Priorità**: MEDIA
+**Description**: Remove notification **Parameters**: `--id notification_id`
+**Priority**: MEDIUM
 
 ---
 
 #### termux-notification-list
 
-**Descrizione**: Lista notifiche attive **Output**: JSON array **Priorità**:
-BASSA
+**Description**: List active notifications **Output**: JSON array **Priority**:
+LOW
 
 ---
 
@@ -141,15 +140,15 @@ BASSA
 
 #### termux-clipboard-get
 
-**Descrizione**: Legge clipboard **Parametri**: Nessuno **Output**: Contenuto
-clipboard su stdout **Priorità**: ALTA
+**Description**: Read clipboard **Parameters**: None **Output**: Clipboard
+content to stdout **Priority**: HIGH
 
 ---
 
 #### termux-clipboard-set
 
-**Descrizione**: Scrive su clipboard **Input**: Testo da stdin **Output**:
-Nessuno **Priorità**: ALTA **Esempio**: `echo "text" | termux-clipboard-set`
+**Description**: Write to clipboard **Input**: Text from stdin **Output**: None
+**Priority**: HIGH **Example**: `echo "text" | termux-clipboard-set`
 
 ---
 
@@ -157,24 +156,24 @@ Nessuno **Priorità**: ALTA **Esempio**: `echo "text" | termux-clipboard-set`
 
 #### termux-camera-info
 
-**Descrizione**: Info fotocamere disponibili **Output**: JSON con id, facing,
-resolutions **Priorità**: MEDIA
+**Description**: Available cameras info **Output**: JSON with id, facing,
+resolutions **Priority**: MEDIUM
 
 ---
 
 #### termux-camera-photo
 
-**Descrizione**: Scatta foto **Parametri**:
+**Description**: Take photo **Parameters**:
 
 - `-c camera_id` (0=back, 1=front)
-- `output_file` **Output**: File JPEG **Priorità**: MEDIA **Esempio**:
+- `output_file` **Output**: JPEG File **Priority**: MEDIUM **Example**:
   `termux-camera-photo -c 0 photo.jpg`
 
 ---
 
 #### termux-microphone-record
 
-**Descrizione**: Registra audio **Parametri**:
+**Description**: Record audio **Parameters**:
 
 - `-f output_file`
 - `-l limit_seconds`
@@ -183,31 +182,31 @@ resolutions **Priorità**: MEDIA
 - `-r sample_rate`
 - `-c channels` (1, 2)
 - `-d` (stop recording)
-- `-i` (info current recording) **Priorità**: MEDIA
+- `-i` (info current recording) **Priority**: MEDIUM
 
 ---
 
 #### termux-media-player
 
-**Descrizione**: Controlla media player **Parametri**:
+**Description**: Control media player **Parameters**:
 
 - `play file`
 - `pause`
 - `stop`
-- `info` **Priorità**: BASSA
+- `info` **Priority**: LOW
 
 ---
 
 #### termux-media-scan
 
-**Descrizione**: Scan media files **Parametri**: `-r` recursive, file/directory
-path **Priorità**: BASSA
+**Description**: Scan media files **Parameters**: `-r` recursive, file/directory
+path **Priority**: LOW
 
 ---
 
 #### termux-tts-speak
 
-**Descrizione**: Text-to-Speech **Parametri**:
+**Description**: Text-to-Speech **Parameters**:
 
 - `-e engine`
 - `-l language`
@@ -215,22 +214,22 @@ path **Priorità**: BASSA
 - `-v variant`
 - `-p pitch` (default 1.0)
 - `-r rate` (default 1.0)
-- `-s stream` (NOTIFICATION, MUSIC, etc.) **Input**: Testo da stdin
-  **Priorità**: ALTA **Esempio**: `echo "Ciao" | termux-tts-speak -l it`
+- `-s stream` (NOTIFICATION, MUSIC, etc.) **Input**: Text from stdin
+  **Priority**: HIGH **Example**: `echo "Hello" | termux-tts-speak -l en`
 
 ---
 
 #### termux-tts-engines
 
-**Descrizione**: Lista TTS engines disponibili **Output**: JSON array
-**Priorità**: BASSA
+**Description**: List available TTS engines **Output**: JSON array **Priority**:
+LOW
 
 ---
 
 #### termux-speech-to-text
 
-**Descrizione**: Speech recognition **Parametri**: Nessuno (avvia ascolto)
-**Output**: Testo riconosciuto **Priorità**: MEDIA
+**Description**: Speech recognition **Parameters**: None (starts listening)
+**Output**: Recognized text **Priority**: MEDIUM
 
 ---
 
@@ -238,11 +237,11 @@ path **Priorità**: BASSA
 
 #### termux-location
 
-**Descrizione**: Ottiene posizione GPS **Parametri**:
+**Description**: Get GPS location **Parameters**:
 
 - `-p provider` (gps, network, passive)
-- `-r request` (once, last, updates) **Output**: JSON con latitude, longitude,
-  altitude, accuracy, etc. **Priorità**: ALTA **Esempio**:
+- `-r request` (once, last, updates) **Output**: JSON with latitude, longitude,
+  altitude, accuracy, etc. **Priority**: HIGH **Example**:
   `termux-location -p gps -r once`
 
 ---
@@ -251,58 +250,58 @@ path **Priorità**: BASSA
 
 #### termux-sensor
 
-**Descrizione**: Legge sensori **Parametri**:
+**Description**: Read sensors **Parameters**:
 
-- `-l` lista sensori
+- `-l` list sensors
 - `-s sensor_name`
 - `-d delay_ms`
 - `-n count`
-- `-c` cleanup **Output**: JSON con valori sensore **Priorità**: MEDIA
+- `-c` cleanup **Output**: JSON with sensor values **Priority**: MEDIUM
 
 ---
 
 #### termux-torch
 
-**Descrizione**: Controlla flashlight **Parametri**: `on` | `off` **Priorità**:
-MEDIA
+**Description**: Control flashlight **Parameters**: `on` | `off` **Priority**:
+MEDIUM
 
 ---
 
 #### termux-vibrate
 
-**Descrizione**: Vibrazione **Parametri**:
+**Description**: Vibrate **Parameters**:
 
 - `-d duration_ms`
-- `-f` force (anche in silent mode) **Priorità**: MEDIA **Esempio**:
+- `-f` force (even in silent mode) **Priority**: MEDIUM **Example**:
   `termux-vibrate -d 500`
 
 ---
 
 #### termux-brightness
 
-**Descrizione**: Imposta luminosità **Parametri**: `0-255` o `auto`
-**Priorità**: BASSA
+**Description**: Set brightness **Parameters**: `0-255` or `auto` **Priority**:
+LOW
 
 ---
 
 #### termux-infrared-frequencies
 
-**Descrizione**: Frequenze IR supportate **Output**: JSON array di range
-frequenze **Priorità**: BASSA
+**Description**: Supported IR frequencies **Output**: JSON array of frequency
+ranges **Priority**: LOW
 
 ---
 
 #### termux-infrared-transmit
 
-**Descrizione**: Trasmette IR **Parametri**: `-f frequency` pattern
-**Priorità**: BASSA
+**Description**: Transmit IR **Parameters**: `-f frequency` pattern
+**Priority**: LOW
 
 ---
 
 #### termux-fingerprint
 
-**Descrizione**: Autenticazione fingerprint **Output**: JSON con auth_result
-**Priorità**: ALTA (security) **Note**: Richiede hardware biometrico
+**Description**: Fingerprint authentication **Output**: JSON with auth_result
+**Priority**: HIGH (security) **Notes**: Requires biometric hardware
 
 ---
 
@@ -310,52 +309,51 @@ frequenze **Priorità**: BASSA
 
 #### termux-sms-send
 
-**Descrizione**: Invia SMS **Parametri**:
+**Description**: Send SMS **Parameters**:
 
 - `-n number` (recipient)
-- `-s slot` (SIM slot) **Input**: Messaggio da stdin **Priorità**: ALTA (con
-  cautela) **Privacy**: CRITICO
+- `-s slot` (SIM slot) **Input**: Message from stdin **Priority**: HIGH (with
+  caution) **Privacy**: CRITICAL
 
 ---
 
 #### termux-sms-inbox
 
-**Descrizione**: Legge SMS inbox (deprecato) **Usa**: termux-sms-list
+**Description**: Read SMS inbox (deprecated) **Use**: termux-sms-list
 
 ---
 
 #### termux-sms-list
 
-**Descrizione**: Lista SMS **Parametri**:
+**Description**: List SMS **Parameters**:
 
 - `-l limit`
 - `-o offset`
 - `-t type` (inbox, sent, draft, all)
 - `-n` (show phone numbers)
-- `-d` (show dates) **Output**: JSON array **Privacy**: CRITICO
+- `-d` (show dates) **Output**: JSON array **Privacy**: CRITICAL
 
 ---
 
 #### termux-telephony-call
 
-**Descrizione**: Effettua chiamata **Parametri**: `phone_number` **Privacy**:
-CRITICO
+**Description**: Make call **Parameters**: `phone_number` **Privacy**: CRITICAL
 
 ---
 
 #### termux-call-log
 
-**Descrizione**: Log chiamate **Parametri**:
+**Description**: Call log **Parameters**:
 
 - `-l limit`
-- `-o offset` **Output**: JSON array **Privacy**: CRITICO
+- `-o offset` **Output**: JSON array **Privacy**: CRITICAL
 
 ---
 
 #### termux-contact-list
 
-**Descrizione**: Lista contatti **Output**: JSON array con name, number
-**Privacy**: CRITICO
+**Description**: Contact list **Output**: JSON array with name, number
+**Privacy**: CRITICAL
 
 ---
 
@@ -363,64 +361,64 @@ CRITICO
 
 #### termux-download
 
-**Descrizione**: Download file con system downloader **Parametri**:
+**Description**: Download file using system downloader **Parameters**:
 
 - `-d description`
 - `-t title`
-- `url` **Priorità**: MEDIA
+- `url` **Priority**: MEDIUM
 
 ---
 
 #### termux-share
 
-**Descrizione**: Condivide file/testo **Parametri**:
+**Description**: Share file/text **Parameters**:
 
 - `-a action` (edit, send, view)
 - `-c content-type`
 - `-d` (default activity)
-- `-t title` **Input**: File o stdin **Priorità**: MEDIA
+- `-t title` **Input**: File or stdin **Priority**: MEDIUM
 
 ---
 
 #### termux-open
 
-**Descrizione**: Apre file con app associata **Parametri**:
+**Description**: Open file with associated app **Parameters**:
 
 - `--send` (send action)
 - `--view` (view action)
-- `--chooser` (mostra chooser)
+- `--chooser` (show chooser)
 - `--content-type type`
-- `file_path` **Priorità**: MEDIA
+- `file_path` **Priority**: MEDIUM
 
 ---
 
 #### termux-open-url
 
-**Descrizione**: Apre URL nel browser **Parametri**: `url` **Priorità**: MEDIA
+**Description**: Open URL in browser **Parameters**: `url` **Priority**: MEDIUM
 
 ---
 
 #### termux-storage-get
 
-**Descrizione**: Richiede file da storage Android **Parametri**: `output_file`
-**Priorità**: BASSA
+**Description**: Request file from Android storage **Parameters**: `output_file`
+**Priority**: LOW
 
 ---
 
 #### termux-saf-\* (Storage Access Framework)
 
-**Comandi**:
+**Commands**:
 
-- `termux-saf-create` - Crea file
-- `termux-saf-dirs` - Lista directory SAF
-- `termux-saf-ls` - Lista contenuto
-- `termux-saf-managedir` - Gestisci accesso dir
-- `termux-saf-mkdir` - Crea directory
-- `termux-saf-read` - Legge file
-- `termux-saf-rm` - Rimuove file
-- `termux-saf-stat` - Info file
-- `termux-saf-write` - Scrive file **Priorità**: BASSA **Note**: Per accesso
-  storage esterno Android 11+
+- `termux-saf-create` - Create file
+- `termux-saf-dirs` - List SAF directories
+- `termux-saf-ls` - List content
+- `termux-saf-managedir` - Manage dir access
+- `termux-saf-mkdir` - Create directory
+- `termux-saf-read` - Read file
+- `termux-saf-rm` - Remove file
+- `termux-saf-stat` - File info
+- `termux-saf-write` - Write file **Priority**: LOW **Notes**: For external
+  storage access on Android 11+
 
 ---
 
@@ -428,40 +426,40 @@ CRITICO
 
 #### termux-volume
 
-**Descrizione**: Controlla volume **Parametri**:
+**Description**: Control volume **Parameters**:
 
-- Senza parametri: mostra volumi
-- `stream volume` (imposta volume) **Streams**: alarm, music, notification,
-  ring, system, call **Priorità**: MEDIA
+- Without parameters: show volumes
+- `stream volume` (set volume) **Streams**: alarm, music, notification, ring,
+  system, call **Priority**: MEDIUM
 
 ---
 
 #### termux-wake-lock
 
-**Descrizione**: Acquisisce wake lock (previene sleep) **Priorità**: MEDIA
+**Description**: Acquire wake lock (prevent sleep) **Priority**: MEDIUM
 
 ---
 
 #### termux-wake-unlock
 
-**Descrizione**: Rilascia wake lock **Priorità**: MEDIA
+**Description**: Release wake lock **Priority**: MEDIUM
 
 ---
 
 #### termux-wallpaper
 
-**Descrizione**: Imposta wallpaper **Parametri**:
+**Description**: Set wallpaper **Parameters**:
 
 - `-f file`
 - `-u url`
-- `-l` (lockscreen) **Priorità**: BASSA
+- `-l` (lockscreen) **Priority**: LOW
 
 ---
 
 #### termux-wifi-enable
 
-**Descrizione**: Enable/disable WiFi **Parametri**: `true` | `false`
-**Priorità**: BASSA **Note**: Potrebbe richiedere permessi speciali
+**Description**: Enable/disable WiFi **Parameters**: `true` | `false`
+**Priority**: LOW **Notes**: May require special permissions
 
 ---
 
@@ -469,7 +467,7 @@ CRITICO
 
 #### termux-dialog
 
-**Descrizione**: Mostra dialog interattivo **Parametri**:
+**Description**: Show interactive dialog **Parameters**:
 
 - `-t title`
 - `-l` list widget
@@ -483,7 +481,7 @@ CRITICO
 - `-c` confirm dialog
 - `-C` counter
 - `--values v1,v2,v3`
-- `--range min,max` **Output**: JSON con risultato **Priorità**: MEDIA
+- `--range min,max` **Output**: JSON with result **Priority**: MEDIUM
 
 ---
 
@@ -491,28 +489,28 @@ CRITICO
 
 #### termux-nfc
 
-**Descrizione**: Operazioni NFC **Parametri**: Vari per lettura/scrittura tag
-**Priorità**: BASSA
+**Description**: NFC operations **Parameters**: Various for reading/writing tags
+**Priority**: LOW
 
 ---
 
 #### termux-usb
 
-**Descrizione**: Info dispositivi USB **Parametri**:
+**Description**: USB device info **Parameters**:
 
-- `-l` lista devices
-- `-r` richiedi permessi
-- `-e command` esegui con permessi USB **Priorità**: BASSA
+- `-l` list devices
+- `-r` request permissions
+- `-e command` execute with USB permissions **Priority**: LOW
 
 ---
 
 #### termux-job-scheduler
 
-**Descrizione**: Schedula job periodici **Parametri**:
+**Description**: Schedule periodic jobs **Parameters**:
 
-- `--pending` lista job
-- `--cancel-all` cancella tutti
-- `--cancel id` cancella specifico
+- `--pending` list jobs
+- `--cancel-all` cancel all
+- `--cancel id` cancel specific
 - `--job-id id`
 - `--script path`
 - `--period-ms ms`
@@ -521,25 +519,25 @@ CRITICO
 - `--storage-not-low`
 - `--charging`
 - `--idle`
-- `--persisted` **Priorità**: MEDIA
+- `--persisted` **Priority**: MEDIUM
 
 ---
 
 #### termux-keystore
 
-**Descrizione**: Gestione chiavi crittografiche **Parametri**:
+**Description**: Cryptographic key management **Parameters**:
 
-- `list` lista chiavi
-- `delete alias` elimina chiave
-- `generate alias [-a algorithm] [-s size]` genera chiave
-- `sign alias` firma dati
-- `verify alias` verifica firma **Priorità**: BASSA (avanzato)
+- `list` list keys
+- `delete alias` delete key
+- `generate alias [-a algorithm] [-s size]` generate key
+- `sign alias` sign data
+- `verify alias` verify signature **Priority**: LOW (advanced)
 
 ---
 
-## Priorità di Integrazione
+## Integration Priority
 
-### Fase 1 - Core (ALTA)
+### Phase 1 - Core (HIGH)
 
 1. termux-battery-status
 2. termux-clipboard-get
@@ -550,7 +548,7 @@ CRITICO
 7. termux-wifi-connectioninfo
 8. termux-info
 
-### Fase 2 - Extended (MEDIA)
+### Phase 2 - Extended (MEDIUM)
 
 1. termux-location
 2. termux-camera-photo
@@ -561,33 +559,33 @@ CRITICO
 7. termux-audio-info
 8. termux-sensor
 
-### Fase 3 - Advanced (BASSA)
+### Phase 3 - Advanced (LOW)
 
-1. termux-sms-send (con cautela)
+1. termux-sms-send (with caution)
 2. termux-microphone-record
 3. termux-speech-to-text
 4. termux-job-scheduler
 5. termux-saf-\*
-6. Altri
+6. Others
 
 ---
 
 ## Security Considerations
 
-### Comandi con Privacy Implications
+### Commands with Privacy Implications
 
-- `termux-sms-*` - Accesso SMS
-- `termux-call-log` - Log chiamate
-- `termux-contact-list` - Rubrica
+- `termux-sms-*` - SMS Access
+- `termux-call-log` - Call Logs
+- `termux-contact-list` - Contacts
 - `termux-telephony-deviceinfo` - IMEI
-- `termux-location` - Posizione
+- `termux-location` - Location
 
-### Raccomandazioni
+### Recommendations
 
-1. **Conferma utente obbligatoria** per comandi privacy-sensitive
-2. **Non includere** output sensibile nel contesto LLM
-3. **Log audit** per comandi critici
-4. **Rate limiting** per prevenire abuse
+1. **Mandatory user confirmation** for privacy-sensitive commands
+2. **Do not include** sensitive output in LLM context unless necessary
+3. **Audit log** for critical commands
+4. **Rate limiting** to prevent abuse
 
 ---
 

@@ -7,32 +7,32 @@
 
 ## Overview
 
-Piano di esecuzione per implementare le patch e miglioramenti descritti nella
-documentazione. Da eseguire con Sonnet 4.5 SOLO dopo approvazione.
+Execution plan to implement the patches and improvements described in the
+documentation. To be executed with Sonnet 4.5 ONLY after approval.
 
-**IMPORTANTE**: Solo modifiche locali, NESSUN PUSH.
+**IMPORTANT**: Local changes only, NO PUSH.
 
 ---
 
-## Pre-Requisiti
+## Prerequisites
 
-Prima di iniziare:
+Before starting:
 
 ```bash
 cd ~/Dev/gemini-cli-termux
-git status  # Verificare stato pulito
-git branch  # Verificare branch corrente
+git status  # Verify clean state
+git branch  # Verify current branch
 ```
 
 ---
 
 ## Task List
 
-### FASE 1: Miglioramenti Installazione
+### PHASE 1: Installation Improvements
 
-#### Task 1.1: Creare postinstall script
+#### Task 1.1: Create postinstall script
 
-**File**: `scripts/postinstall.js` **Azione**: CREATE **Priorità**: ALTA
+**File**: `scripts/postinstall.js` **Action**: CREATE **Priority**: HIGH
 
 ```javascript
 // scripts/postinstall.js
@@ -78,11 +78,11 @@ if (
 
 ---
 
-#### Task 1.2: Aggiornare package.json con postinstall
+#### Task 1.2: Update package.json with postinstall
 
-**File**: `package.json` **Azione**: EDIT **Priorità**: ALTA
+**File**: `package.json` **Action**: EDIT **Priority**: HIGH
 
-Aggiungere in `scripts`:
+Add in `scripts`:
 
 ```json
 "postinstall": "node scripts/postinstall.js || true"
@@ -90,9 +90,9 @@ Aggiungere in `scripts`:
 
 ---
 
-#### Task 1.3: Creare termux-setup.sh helper
+#### Task 1.3: Create termux-setup.sh helper
 
-**File**: `scripts/termux-setup.sh` **Azione**: CREATE **Priorità**: MEDIA
+**File**: `scripts/termux-setup.sh` **Action**: CREATE **Priority**: MEDIUM
 
 ```bash
 #!/data/data/com.termux/files/usr/bin/bash
@@ -138,11 +138,11 @@ echo ""
 
 ---
 
-#### Task 1.4: Aggiornare Makefile
+#### Task 1.4: Update Makefile
 
-**File**: `Makefile` **Azione**: EDIT **Priorità**: MEDIA
+**File**: `Makefile` **Action**: EDIT **Priority**: MEDIUM
 
-Aggiungere target:
+Add target:
 
 ```makefile
 # Termux-specific install and build
@@ -163,12 +163,12 @@ termux-clean:
 
 ---
 
-### FASE 2: Termux Detection Utility
+### PHASE 2: Termux Detection Utility
 
-#### Task 2.1: Creare termux-detect.ts
+#### Task 2.1: Create termux-detect.ts
 
-**File**: `packages/core/src/utils/termux-detect.ts` **Azione**: CREATE
-**Priorità**: MEDIA
+**File**: `packages/core/src/utils/termux-detect.ts` **Action**: CREATE
+**Priority**: MEDIUM
 
 ```typescript
 /**
@@ -275,11 +275,11 @@ export function detectTermuxEnvironment(): TermuxEnvironment {
 
 ---
 
-#### Task 2.2: Export termux-detect da core index
+#### Task 2.2: Export termux-detect from core index
 
-**File**: `packages/core/src/index.ts` **Azione**: EDIT **Priorità**: MEDIA
+**File**: `packages/core/src/index.ts` **Action**: EDIT **Priority**: MEDIUM
 
-Aggiungere export:
+Add export:
 
 ```typescript
 export * from './utils/termux-detect.js';
@@ -287,13 +287,13 @@ export * from './utils/termux-detect.js';
 
 ---
 
-### FASE 3: Punycode Warning Suppression
+### PHASE 3: Punycode Warning Suppression
 
-#### Task 3.1: Aggiornare esbuild banner
+#### Task 3.1: Update esbuild banner
 
-**File**: `esbuild.config.js` **Azione**: EDIT **Priorità**: BASSA
+**File**: `esbuild.config.js` **Action**: EDIT **Priority**: LOW
 
-Modificare il banner JS per includere:
+Modify JS banner to include:
 
 ```javascript
 banner: {
@@ -313,32 +313,32 @@ if (process.platform === 'android') {
 
 ---
 
-### FASE 4: Tool Discovery Scripts (User-space)
+### PHASE 4: Tool Discovery Scripts (User-space)
 
-#### Task 4.1: Creare discovery.sh in scripts/termux-tools/
+#### Task 4.1: Create discovery.sh in scripts/termux-tools/
 
-**File**: `scripts/termux-tools/discovery.sh` **Azione**: CREATE **Priorità**:
-MEDIA
+**File**: `scripts/termux-tools/discovery.sh` **Action**: CREATE **Priority**:
+MEDIUM
 
-(Contenuto già definito in DISCOVERY_SETUP.md)
-
----
-
-#### Task 4.2: Creare call.sh in scripts/termux-tools/
-
-**File**: `scripts/termux-tools/call.sh` **Azione**: CREATE **Priorità**: MEDIA
-
-(Contenuto già definito in DISCOVERY_SETUP.md)
+(Content already defined in DISCOVERY_SETUP.md)
 
 ---
 
-### FASE 5: Documentazione
+#### Task 4.2: Create call.sh in scripts/termux-tools/
 
-#### Task 5.1: Aggiornare README.md principale
+**File**: `scripts/termux-tools/call.sh` **Action**: CREATE **Priority**: MEDIUM
 
-**File**: `README.md` **Azione**: EDIT **Priorità**: ALTA
+(Content already defined in DISCOVERY_SETUP.md)
 
-Aggiungere sezione Termux-API:
+---
+
+### PHASE 5: Documentation
+
+#### Task 5.1: Update main README.md
+
+**File**: `README.md` **Action**: EDIT **Priority**: HIGH
+
+Add Termux-API section:
 
 ```markdown
 ## Termux-API Integration (New!)
@@ -356,11 +356,11 @@ See [docs/termux-api/](./docs/termux-api/) for:
 
 ---
 
-#### Task 5.2: Aggiornare docs/TERMUX.md
+#### Task 5.2: Update docs/TERMUX.md
 
-**File**: `docs/TERMUX.md` **Azione**: EDIT **Priorità**: MEDIA
+**File**: `docs/TERMUX.md` **Action**: EDIT **Priority**: MEDIUM
 
-Aggiungere sezione Termux-API:
+Add Termux-API section:
 
 ````markdown
 ## Termux-API Support (Optional)
@@ -398,12 +398,12 @@ See [docs/termux-api/](./docs/termux-api/) for complete documentation.
 
 ---
 
-#### Task 5.3: Aggiornare docs/patches/README.md
+#### Task 5.3: Update docs/patches/README.md
 **File**: `docs/patches/README.md`
-**Azione**: EDIT
-**Priorità**: BASSA
+**Action**: EDIT
+**Priority**: LOW
 
-Aggiornare versione e aggiungere nuove patch:
+Update version and add new patches:
 ```markdown
 # Termux Patches (0.22.0-termux)
 
@@ -436,24 +436,24 @@ Minimal changes to run `gemini-cli` on Android/Termux ARM64 without native deps.
 ## Execution Order
 
 ```
-FASE 1 (Installazione) - Alta priorità
+PHASE 1 (Installation) - High Priority
 ├── 1.1 scripts/postinstall.js [CREATE]
 ├── 1.2 package.json [EDIT - postinstall]
 ├── 1.3 scripts/termux-setup.sh [CREATE]
 └── 1.4 Makefile [EDIT - termux targets]
 
-FASE 2 (Detection) - Media priorità
+PHASE 2 (Detection) - Medium Priority
 ├── 2.1 packages/core/src/utils/termux-detect.ts [CREATE]
 └── 2.2 packages/core/src/index.ts [EDIT - export]
 
-FASE 3 (Warning) - Bassa priorità
+PHASE 3 (Warning) - Low Priority
 └── 3.1 esbuild.config.js [EDIT - banner]
 
-FASE 4 (Discovery Scripts) - Media priorità
+PHASE 4 (Discovery Scripts) - Medium Priority
 ├── 4.1 scripts/termux-tools/discovery.sh [CREATE]
 └── 4.2 scripts/termux-tools/call.sh [CREATE]
 
-FASE 5 (Docs) - Alta priorità
+PHASE 5 (Docs) - High Priority
 ├── 5.1 README.md [EDIT]
 ├── 5.2 docs/TERMUX.md [EDIT]
 └── 5.3 docs/patches/README.md [EDIT]
@@ -461,7 +461,7 @@ FASE 5 (Docs) - Alta priorità
 
 ---
 
-## Verifica Post-Esecuzione
+## Post-Execution Verification
 
 ```bash
 # 1. Build test
@@ -472,20 +472,20 @@ npm run bundle
 # 2. Version check
 node bundle/gemini.js --version
 
-# 3. Termux detection (se su Termux)
+# 3. Termux detection (if on Termux)
 node -e "const {isTermux} = require('./packages/core/dist/utils/termux-detect.js'); console.log('isTermux:', isTermux())"
 
-# 4. Discovery test (se configurato)
+# 4. Discovery test (if configured)
 bash scripts/termux-tools/discovery.sh | jq '.[] | .name' | head -5
 
-# 5. Git status (NESSUN PUSH)
+# 5. Git status (NO PUSH)
 git status
 git diff --stat
 ```
 
 ---
 
-## Commit Message (quando approvato)
+## Commit Message (when approved)
 
 ```
 feat(termux): improve installation and add Termux-API support
@@ -503,30 +503,30 @@ Fixes #XX
 
 ---
 
-### FASE 6: Merge Automation
+### PHASE 6: Merge Automation
 
-#### Task 6.1: Creare check-termux-patches.sh
+#### Task 6.1: Create check-termux-patches.sh
 
-**File**: `scripts/check-termux-patches.sh` **Azione**: CREATE **Priorità**:
-ALTA
+**File**: `scripts/check-termux-patches.sh` **Action**: CREATE **Priority**:
+HIGH
 
-Script per verificare che tutte le patch siano intatte dopo merge upstream.
-(Vedi MERGE_STRATEGY.md per contenuto completo)
-
----
-
-## Note per Sonnet 4.5
-
-1. Eseguire task in ordine di FASE
-2. Verificare build dopo ogni FASE
-3. NON eseguire git push
-4. Segnalare eventuali errori di compilazione
-5. Tutti i file TypeScript devono passare typecheck
-6. Tutte le patch devono essere facilmente riaplicabili dopo merge upstream
-7. Usare commenti `// TERMUX PATCH:` per identificare modifiche
+Script to verify that all patches are intact after upstream merge. (See
+MERGE_STRATEGY.md for complete content)
 
 ---
 
-**STATUS**: In attesa approvazione DAG
+## Notes for Sonnet 4.5
+
+1. Execute tasks in PHASE order
+2. Verify build after each PHASE
+3. DO NOT execute git push
+4. Report any compilation errors
+5. All TypeScript files must pass typecheck
+6. All patches must be easily re-applicable after upstream sync
+7. Use `// TERMUX PATCH:` comments to identify modifications
+
+---
+
+**STATUS**: Awaiting DAG approval
 
 _Author: DioNanos_

@@ -7,16 +7,16 @@
 
 ## Executive Summary
 
-Questo documento analizza le patch attuali del fork Termux e propone
-miglioramenti per l'installazione e l'esperienza utente.
+This document analyzes the current patches of the Termux fork and proposes
+improvements for installation and user experience.
 
 ---
 
-## Patch Attuali
+## Current Patches
 
 ### 1. Clipboard TERMUX\_\_PREFIX
 
-**File**: `esbuild.config.js` (riga 80-81)
+**File**: `esbuild.config.js` (lines 80-81)
 
 ```javascript
 // Termux compatibility: clipboardy expects TERMUX__PREFIX but Termux sets PREFIX
@@ -29,15 +29,15 @@ if (
 }
 ```
 
-**Scopo**: clipboardy usa `TERMUX__PREFIX` per rilevare Termux, ma Termux setta
-`PREFIX`
+**Purpose**: clipboardy uses `TERMUX__PREFIX` to detect Termux, but Termux sets
+`PREFIX`.
 
-**Status**: ✅ Funzionante
+**Status**: ✅ Functional
 
-**Miglioramenti proposti**:
+**Proposed Improvements**:
 
-- Aggiungere anche `TERMUX_VERSION` check per maggiore robustezza
-- Considerare contributo a clipboardy upstream
+- Add `TERMUX_VERSION` check for better robustness
+- Consider contributing to upstream clipboardy
 
 ---
 
@@ -54,14 +54,14 @@ const isInCi = false;
 export default isInCi;
 ```
 
-**Scopo**: Termux può essere rilevato erroneamente come CI, disabilitando UI ink
+**Purpose**: Termux might be incorrectly detected as CI, disabling Ink UI.
 
-**Status**: ✅ Funzionante
+**Status**: ✅ Functional
 
-**Miglioramenti proposti**:
+**Proposed Improvements**:
 
-- Aggiungere log debug quando override è attivo
-- Documentare meglio il comportamento
+- Add debug log when override is active
+- Better document the behavior
 
 ---
 
@@ -83,12 +83,12 @@ export default isInCi;
 }
 ```
 
-**Scopo**: Permette installazione senza compilazione native modules
+**Purpose**: Allows installation without compiling native modules.
 
-**Status**: ✅ Funzionante, ma con warning
+**Status**: ✅ Functional, but with warnings
 
-**Miglioramenti proposti**: Vedi sezione
-[Miglioramenti Installazione](#miglioramenti-installazione)
+**Proposed Improvements**: See
+[Installation Improvements](#installation-improvements)
 
 ---
 
@@ -108,26 +108,26 @@ const external = [
 ];
 ```
 
-**Scopo**: Esclude moduli nativi dal bundle
+**Purpose**: Excludes native modules from the bundle.
 
-**Status**: ✅ Funzionante
+**Status**: ✅ Functional
 
 ---
 
-## Miglioramenti Installazione
+## Installation Improvements
 
-### Problema 1: Warning durante npm install
+### Issue 1: Warning during npm install
 
-**Sintomo**:
+**Symptom**:
 
 ```
 npm warn optional SKIPPING OPTIONAL DEPENDENCY: @lydell/node-pty@1.1.0
 npm warn notsup SKIPPING OPTIONAL DEPENDENCY: Unsupported platform for @lydell/node-pty-linux-x64
 ```
 
-**Soluzione proposta**:
+**Proposed Solution**:
 
-#### A. Script postinstall personalizzato
+#### A. Custom postinstall script
 
 ```javascript
 // scripts/postinstall.js
@@ -163,7 +163,7 @@ if (os.platform() === 'android' || process.env.TERMUX_VERSION) {
 }
 ```
 
-**Modifica package.json**:
+**Modify package.json**:
 
 ```json
 {
@@ -173,9 +173,9 @@ if (os.platform() === 'android' || process.env.TERMUX_VERSION) {
 }
 ```
 
-#### B. Documentazione .npmrc
+#### B. Documentation .npmrc
 
-Creare `.npmrc` con:
+Create `.npmrc` with:
 
 ```ini
 # Suppress optional dependency warnings
@@ -183,17 +183,17 @@ loglevel=error
 optional=false
 ```
 
-**Nota**: Non raccomandato globalmente, ma utile per utenti avanzati.
+**Note**: Not recommended globally, but useful for advanced users.
 
 ---
 
-### Problema 2: Build from source richiede flag manuali
+### Issue 2: Build from source requires manual flags
 
-**Sintomo**: Utenti devono ricordare `--ignore-optional --ignore-scripts`
+**Symptom**: Users must remember `--ignore-optional --ignore-scripts`.
 
-**Soluzione proposta**:
+**Proposed Solution**:
 
-#### A. Makefile migliorato
+#### A. Improved Makefile
 
 ```makefile
 # Makefile
@@ -202,7 +202,7 @@ optional=false
 
 # Standard install (desktop)
 install:
-	npm install
+	nnpm install
 
 # Termux-specific install
 termux-install:
@@ -223,7 +223,7 @@ clean:
 	rm -rf node_modules bundle/gemini.js
 ```
 
-#### B. Script helper
+#### B. Helper script
 
 **File**: `scripts/termux-setup.sh`
 
@@ -249,6 +249,7 @@ npm run build
 npm run bundle
 
 echo ""
+
 echo "=== Setup Complete ==="
 echo "Run: node bundle/gemini.js"
 echo "Or link globally: npm link"
@@ -256,13 +257,13 @@ echo "Or link globally: npm link"
 
 ---
 
-### Problema 3: Prima esecuzione lenta
+### Issue 3: Slow first run
 
-**Sintomo**: Prima esecuzione di `gemini` ha delay per auth/setup
+**Symptom**: First run of `gemini` has delay for auth/setup.
 
-**Soluzione proposta**:
+**Proposed Solution**:
 
-#### A. Configurazione Termux-aware
+#### A. Termux-aware Configuration
 
 **File**: `packages/core/src/config/termux-defaults.ts`
 
@@ -292,13 +293,13 @@ export function isTermux(): boolean {
 
 ---
 
-### Problema 4: Aggiornamento manuale
+### Issue 4: Manual updates
 
-**Sintomo**: Utenti devono controllare manualmente le nuove versioni
+**Symptom**: Users must manually check for new versions.
 
-**Soluzione proposta**:
+**Proposed Solution**:
 
-#### A. Update checker opzionale
+#### A. Optional Update Checker
 
 ```typescript
 // packages/cli/src/utils/update-check.ts
@@ -321,13 +322,13 @@ export async function checkForUpdates(currentVersion: string): Promise<void> {
 
 ---
 
-## Nuove Patch Proposte
+## New Proposed Patches
 
 ### Patch 5: Termux-API Detection
 
-**Scopo**: Rilevare automaticamente se Termux-API è installato
+**Purpose**: Automatically detect if Termux-API is installed.
 
-**Implementazione**:
+**Implementation**:
 
 ```typescript
 // packages/core/src/utils/termux-detect.ts
@@ -379,9 +380,9 @@ export function detectTermuxEnvironment(): TermuxEnvironment {
 
 ### Patch 6: Suppress Harmless Warnings
 
-**Scopo**: Nascondere warning non rilevanti su Termux
+**Purpose**: Hide irrelevant warnings on Termux.
 
-**Implementazione**:
+**Implementation**:
 
 ```javascript
 // In esbuild banner
@@ -406,9 +407,9 @@ if (process.platform === 'android') {
 
 ### Patch 7: Graceful Fallback Messages
 
-**Scopo**: Messaggi user-friendly quando feature non disponibili
+**Purpose**: User-friendly messages when features are unavailable.
 
-**Implementazione**:
+**Implementation**:
 
 ```typescript
 // packages/core/src/utils/termux-fallbacks.ts
@@ -433,49 +434,49 @@ export function logFallbackOnce(module: string): void {
 
 ---
 
-## Roadmap Patch
+## Patch Roadmap
 
-### Fase 1: Quick Wins (v0.22.1)
+### Phase 1: Quick Wins (v0.22.1)
 
-- [ ] Aggiungere postinstall script con messaggio chiaro
-- [ ] Creare termux-setup.sh helper
-- [ ] Migliorare Makefile
+- [ ] Add postinstall script with clear message
+- [ ] Create termux-setup.sh helper
+- [ ] Improve Makefile
 
-### Fase 2: Polish (v0.23.0)
+### Phase 2: Polish (v0.23.0)
 
-- [ ] Implementare Termux detection
-- [ ] Aggiungere update checker
-- [ ] Suppress warning punycode
+- [ ] Implement Termux detection
+- [ ] Add update checker
+- [ ] Suppress punycode warning
 
-### Fase 3: Integration (v0.24.0)
+### Phase 3: Integration (v0.24.0)
 
-- [ ] Termux-API detection automatica
-- [ ] Pre-configurazione Termux-aware
+- [ ] Automatic Termux-API detection
+- [ ] Termux-aware pre-configuration
 - [ ] Graceful fallback messages
 
 ---
 
-## File da Modificare
+## Files to Modify
 
-| File                                          | Modifica                      |
-| --------------------------------------------- | ----------------------------- |
-| `package.json`                                | Aggiungere postinstall script |
-| `scripts/postinstall.js`                      | Nuovo file                    |
-| `scripts/termux-setup.sh`                     | Nuovo file                    |
-| `Makefile`                                    | Target termux-install         |
-| `esbuild.config.js`                           | Punycode warning suppress     |
-| `packages/core/src/utils/termux-detect.ts`    | Nuovo file                    |
-| `packages/core/src/config/termux-defaults.ts` | Nuovo file                    |
+| File                                          | Modification              |
+| --------------------------------------------- | ------------------------- |
+| `package.json`                                | Add postinstall script    |
+| `scripts/postinstall.js`                      | New file                  |
+| `scripts/termux-setup.sh`                     | New file                  |
+| `Makefile`                                    | Target termux-install     |
+| `esbuild.config.js`                           | Punycode warning suppress |
+| `packages/core/src/utils/termux-detect.ts`    | New file                  |
+| `packages/core/src/config/termux-defaults.ts` | New file                  |
 
 ---
 
-## Compatibilità Upstream
+## Upstream Compatibility
 
-Le patch proposte sono progettate per:
+The proposed patches are designed to:
 
-1. **Non interferire** con funzionalità desktop
-2. **Essere condizionali** (attive solo su Termux)
-3. **Essere facilmente rimovibili** se upstream aggiunge supporto nativo
+1. **Not interfere** with desktop functionality
+2. **Be conditional** (active only on Termux)
+3. **Be easily removable** if upstream adds native support
 
 ---
 

@@ -6,52 +6,52 @@
 
 ## Overview
 
-Strategia per mantenere le patch Termux facilmente applicabili dopo ogni merge
-con l'upstream `google-gemini/gemini-cli`.
+Strategy for maintaining Termux patches easily applicable after each merge with
+the upstream `google-gemini/gemini-cli`.
 
 ---
 
-## Principi di Design
+## Design Principles
 
-### 1. Isolamento delle Patch
+### 1. Patch Isolation
 
-Tutte le modifiche Termux devono essere:
+All Termux modifications must be:
 
-- **Isolate** in file separati quando possibile
-- **Condizionali** (`if (isTermux())`)
-- **Additive** piuttosto che modificative
-- **Documentate** con commenti `// TERMUX PATCH:`
+- **Isolated** in separate files when possible
+- **Conditional** (`if (isTermux())`)
+- **Additive** rather than modifying existing code
+- **Documented** with `// TERMUX PATCH:` comments
 
 ### 2. File Strategy
 
-| Tipo            | Approccio   | Conflitti Merge |
-| --------------- | ----------- | --------------- |
-| **Nuovi file**  | Preferito   | Nessuno         |
-| **Edit minime** | Accettabile | Rari            |
-| **Refactor**    | Evitare     | Frequenti       |
+| Type             | Approach   | Merge Conflicts |
+| ---------------- | ---------- | --------------- |
+| **New files**    | Preferred  | None            |
+| **Minimal edit** | Acceptable | Rare            |
+| **Refactor**     | Avoid      | Frequent        |
 
-### 3. Struttura Patch-Friendly
+### 3. Patch-Friendly Structure
 
 ```
 gemini-cli-termux/
 ├── packages/core/src/
 │   ├── utils/
-│   │   └── termux-detect.ts     # NUOVO - no conflitti
-│   └── index.ts                  # EDIT minima - 1 riga export
+│   │   └── termux-detect.ts     # NEW - no conflicts
+│   └── index.ts                  # Minimal EDIT - 1 export line
 ├── scripts/
-│   ├── postinstall.js           # NUOVO - no conflitti
-│   ├── termux-setup.sh          # NUOVO - no conflitti
-│   └── termux-tools/            # NUOVO - no conflitti
+│   ├── postinstall.js           # NEW - no conflicts
+│   ├── termux-setup.sh          # NEW - no conflicts
+│   └── termux-tools/            # NEW - no conflicts
 │       ├── discovery.sh
 │       └── call.sh
-├── esbuild.config.js            # EDIT - banner (isolato)
+├── esbuild.config.js            # EDIT - banner (isolated)
 ├── package.json                 # EDIT - scripts.postinstall
-└── Makefile                     # EDIT - target aggiuntivi
+└── Makefile                     # EDIT - additional targets
 ```
 
 ---
 
-## Procedura Merge Upstream
+## Upstream Merge Procedure
 
 ### Step 1: Fetch upstream
 
@@ -61,31 +61,31 @@ git remote add upstream https://github.com/google-gemini/gemini-cli.git 2>/dev/n
 git fetch upstream
 ```
 
-### Step 2: Crea branch di merge
+### Step 2: Create merge branch
 
 ```bash
 git checkout -b merge-upstream-vX.Y.Z
 git merge upstream/main --no-commit
 ```
 
-### Step 3: Risolvi conflitti (se presenti)
+### Step 3: Resolve conflicts (if any)
 
-File con conflitti probabili:
+Likely conflict files:
 
-- `package.json` - Risolvere mantenendo nostri scripts
-- `esbuild.config.js` - Risolvere mantenendo nostro banner
-- `packages/core/src/index.ts` - Risolvere mantenendo nostri export
+- `package.json` - Resolve by keeping our scripts
+- `esbuild.config.js` - Resolve by keeping our banner
+- `packages/core/src/index.ts` - Resolve by keeping our exports
 
-### Step 4: Verifica patch intatte
+### Step 4: Verify patches intact
 
 ```bash
-# Check che i nostri file esistano ancora
+# Check that our files still exist
 ls -la packages/core/src/utils/termux-detect.ts
 ls -la scripts/postinstall.js
 ls -la scripts/termux-setup.sh
 ls -la scripts/termux-tools/
 
-# Check che le modifiche siano presenti
+# Check that modifications are present
 grep "TERMUX__PREFIX" esbuild.config.js
 grep "postinstall" package.json
 grep "termux-detect" packages/core/src/index.ts
@@ -109,13 +109,13 @@ git commit -m "merge: upstream vX.Y.Z + Termux patches"
 
 ---
 
-## Conflitti Comuni e Soluzioni
+## Common Conflicts and Solutions
 
 ### package.json
 
-**Conflitto tipico**: `scripts` section modificata upstream
+**Typical conflict**: `scripts` section modified upstream
 
-**Soluzione**:
+**Solution**:
 
 ```json
 {
@@ -128,9 +128,9 @@ git commit -m "merge: upstream vX.Y.Z + Termux patches"
 
 ### esbuild.config.js
 
-**Conflitto tipico**: `banner` modificato upstream
+**Typical conflict**: `banner` modified upstream
 
-**Soluzione**: Mantenere il nostro banner con commento
+**Solution**: Keep our banner with comment
 
 ```javascript
 banner: {
@@ -146,9 +146,9 @@ if (process.platform === 'android' && process.env.PREFIX && !process.env.TERMUX_
 
 ### packages/core/src/index.ts
 
-**Conflitto tipico**: Export aggiunti/modificati upstream
+**Typical conflict**: Exports added/modified upstream
 
-**Soluzione**: Aggiungere il nostro export alla fine
+**Solution**: Add our export at the end
 
 ```typescript
 // ... upstream exports ...
@@ -159,15 +159,15 @@ export * from './utils/termux-detect.js';
 
 ---
 
-## Automazione Merge Check
+## Merge Check Automation
 
-### Script di verifica post-merge
+### Post-merge verification script
 
 **File**: `scripts/check-termux-patches.sh`
 
 ```bash
 #!/bin/bash
-# Verifica che le patch Termux siano intatte dopo un merge
+# Verify that Termux patches are intact after a merge
 
 set -e
 
@@ -175,7 +175,7 @@ echo "=== Checking Termux Patches ==="
 
 ERRORS=0
 
-# Check file esistenza
+# Check file existence
 FILES=(
   "packages/core/src/utils/termux-detect.ts"
   "scripts/postinstall.js"
@@ -193,7 +193,7 @@ for f in "${FILES[@]}"; do
   fi
 done
 
-# Check contenuti chiave
+# Check key contents
 if grep -q "TERMUX__PREFIX" esbuild.config.js; then
   echo "✓ esbuild.config.js has TERMUX patch"
 else
@@ -225,7 +225,7 @@ else
 fi
 ```
 
-### Git Hook (opzionale)
+### Git Hook (optional)
 
 **File**: `.husky/post-merge`
 
@@ -238,19 +238,19 @@ bash scripts/check-termux-patches.sh || echo "WARNING: Termux patches need atten
 
 ## Tracking Upstream Changes
 
-### File da monitorare
+### Files to monitor
 
-| File Upstream                | Impatto | Azione             |
-| ---------------------------- | ------- | ------------------ |
-| `package.json`               | Alto    | Verificare scripts |
-| `esbuild.config.js`          | Alto    | Verificare banner  |
-| `packages/core/src/index.ts` | Medio   | Verificare export  |
-| `packages/core/src/tools/*`  | Basso   | Nessuna azione     |
-| `packages/cli/*`             | Basso   | Nessuna azione     |
+| Upstream File                | Impact | Action         |
+| ---------------------------- | ------ | -------------- |
+| `package.json`               | High   | Verify scripts |
+| `esbuild.config.js`          | High   | Verify banner  |
+| `packages/core/src/index.ts` | Medium | Verify exports |
+| `packages/core/src/tools/*`  | Low    | No action      |
+| `packages/cli/*`             | Low    | No action      |
 
 ### Changelog Tracking
 
-Mantenere nota delle versioni upstream integrate:
+Keep note of integrated upstream versions:
 
 ```
 docs/termux-api/UPSTREAM_TRACKING.md
@@ -267,40 +267,40 @@ docs/termux-api/UPSTREAM_TRACKING.md
 
 ---
 
-## Minimizzare Conflitti Futuri
+## Minimizing Future Conflicts
 
 ### DO
 
-- ✅ Creare nuovi file invece di modificare esistenti
-- ✅ Usare funzioni wrapper invece di modificare funzioni esistenti
-- ✅ Aggiungere alla fine dei file invece che nel mezzo
-- ✅ Usare commenti `// TERMUX PATCH` per identificare modifiche
-- ✅ Mantenere le modifiche atomiche e isolate
+- ✅ Create new files instead of modifying existing ones
+- ✅ Use wrapper functions instead of modifying existing ones
+- ✅ Add to the end of files instead of the middle
+- ✅ Use `// TERMUX PATCH` comments to identify modifications
+- ✅ Keep changes atomic and isolated
 
 ### DON'T
 
-- ❌ Rinominare variabili/funzioni upstream
-- ❌ Ristrutturare codice upstream
-- ❌ Modificare logica core esistente
-- ❌ Aggiungere dipendenze che richiedono build native
-- ❌ Rimuovere codice upstream (solo aggiungere condizionali)
+- ❌ Rename upstream variables/functions
+- ❌ Restructure upstream code
+- ❌ Modify existing core logic
+- ❌ Add dependencies that require native build
+- ❌ Remove upstream code (only add conditionals)
 
 ---
 
-## Recovery da Merge Fallito
+## Recovery from Failed Merge
 
-Se un merge crea troppi conflitti:
+If a merge creates too many conflicts:
 
 ```bash
 # Abort merge
 git merge --abort
 
-# Cherry-pick nostri commit invece
-git log --oneline | head -20  # Trova commit Termux
+# Cherry-pick our commits instead
+git log --oneline | head -20  # Find Termux commits
 git checkout -b manual-merge upstream/main
 git cherry-pick <commit1> <commit2> ...
 
-# Oppure re-apply patch manualmente
+# Or re-apply patch manually
 git diff main~5..main > termux-patches.diff
 git checkout upstream/main
 git apply termux-patches.diff
