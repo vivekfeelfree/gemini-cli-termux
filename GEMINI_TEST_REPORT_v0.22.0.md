@@ -1,7 +1,7 @@
-# 🧪 Gemini CLI Termux Test Report (v0.21.4-termux)
+# 🧪 Gemini CLI Termux Test Report (v0.22.0-termux)
 
-**Date:** 2025-12-11 **Device:** Android 12 (aarch64) **Node Version:** v24.9.0
-**CLI Version:** 0.21.4-termux
+**Date:** 2025-12-17 **Device:** Android (aarch64) **Node Version:** v24.11.1
+**CLI Version:** 0.22.0-termux
 
 ## Test Results
 
@@ -21,18 +21,20 @@
 
 ## Detailed Observations
 
-- **Version Mismatch:** The test suite references `0.21.3-termux`, but the
-  installed version is `0.21.4-termux`. This is expected as we are testing the
-  newer release.
+- **Version:** Confirmed `0.22.0-termux` output from `--version`.
 - **Extensions:** `gemini extensions settings` without arguments returns an exit
   code of 1 and prints usage info, effectively showing the schema/commands
   available.
 - **MCP:** The `memory` MCP server is configured and connected.
 - **Native Dependencies:** `node-pty` is confirmed missing (`MODULE_NOT_FOUND`),
   but this does not hinder core CLI functionality.
+- **Patches:** Verified presence of:
+  - Clipboardy patch (esbuild banner)
+  - PTY fallback patch (core utils)
+  - Hide Banner patch (AppContainer.tsx)
 
 ## Conclusion
 
-The Gemini CLI v0.21.4-termux functions correctly on this Android/Termux
+The Gemini CLI v0.22.0-termux functions correctly on this Android/Termux
 environment, passing all critical compatibility and functionality tests defined
 in the test suite.
