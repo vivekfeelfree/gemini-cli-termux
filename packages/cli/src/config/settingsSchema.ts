@@ -1275,7 +1275,7 @@ const SETTINGS_SCHEMA = {
                   'base',
                 ],
                 description: 'MCP categories to pull into base.json.',
-                showInDialog: true,
+                showInDialog: false,
                 items: {
                   type: 'string',
                   description: 'Category name',
