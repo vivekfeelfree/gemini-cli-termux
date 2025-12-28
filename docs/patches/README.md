@@ -1,6 +1,8 @@
-# Termux Patches (0.24.1-termux)
+# Termux Patches (Upstream Differences)
 
-Minimal changes to run `gemini-cli` on Android/Termux ARM64 without native deps.
+This document lists **all patches** that differentiate this Termux fork from
+upstream `google-gemini/gemini-cli`. It is not tied to a specific release; keep
+it updated whenever a new patch is added or removed.
 
 ## Patch List
 
@@ -25,14 +27,6 @@ Minimal changes to run `gemini-cli` on Android/Termux ARM64 without native deps.
 11. **Shell parser fix** – Base64 polyfill in bundle banner to support
     web-tree-sitter on Node 22/24 (fixes `run_shell_command`).
 
-## New in 0.24.x
-
-- **Memory Mode presets** and **JIT + JSON** combined memory support.
-- **Settings reorg**: Memory options grouped in `/settings → Memory`; MCP import
-  categories hidden.
-- **Shell tool fix**: `Uint8Array.fromBase64` polyfill for web-tree-sitter.
-- **Docs/tests** refreshed for current release.
-
 ## Expected Warnings
 
 - Missing native modules may log warnings on Termux; functionality remains
@@ -48,4 +42,4 @@ All patches are designed to be merge-safe. See
 [docs/termux-api/MERGE_STRATEGY.md](../termux-api/MERGE_STRATEGY.md) for details
 on maintaining patches after upstream sync.
 
-**Version**: 0.24.1-termux (latest)
+**Scope**: All active Termux releases (update as patches change).
