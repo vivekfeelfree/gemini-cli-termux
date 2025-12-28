@@ -27,18 +27,18 @@ _Feature not currently available in this build._
 ## 4. Extensions
 
 4.1 `gemini extensions list` succeeds (even if empty) 4.2
-`gemini extensions settings` prints settings schema
+`gemini extensions settings --help` prints settings schema/usage
 
 ## 5. MCP
 
 5.1 `gemini mcp list` works (empty ok) 5.2 `gemini mcp add --help` exits 0 5.3
-`gemini mcp` shows available commands
+`gemini mcp --help` shows available commands
 
 ## 6. Non-interactive
 
 6.1 `gemini -o json "echo hello"` returns JSON stream 6.2
-`GEMINI_JSONL=1 gemini -o json "pwd"` produces JSONL lines 6.3
-`gemini "What is 2+2?"` returns correct answer
+`GEMINI_JSONL=1 gemini -o json "pwd"` produces JSONL (or a single JSON object)
+6.3 `gemini "What is 2+2?"` returns correct answer
 
 ## 7. File ops (Termux safe)
 
@@ -67,7 +67,7 @@ bundle
 ## 11. Termux-API Integration (v0.22.1+)
 
 11.1 **Detection**:
-`node -e "console.log(require('./packages/core/dist/utils/termux-detect.js').isTermux())"`
+`node -e "console.log(require('./packages/core/dist/src/utils/termux-detect.js').isTermux())"`
 returns `true`
 
 11.2 **Tool Discovery**: - Run `bash scripts/termux-tools/discovery.sh` - Expect
