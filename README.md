@@ -65,10 +65,8 @@ node bundle/gemini.js --version
 ### 📚 Complete Documentation
 
 - **Test Results**
-  - [GEMINI_TEST_REPORT_v0.22.7.md](./GEMINI_TEST_REPORT_v0.22.7.md) — testing
-    channel
-  - [GEMINI_TEST_REPORT_v0.22.2.md](./GEMINI_TEST_REPORT_v0.22.2.md) — stable
-    baseline
+  - [GEMINI_TEST_REPORT_v0.24.0.md](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
+    (partial execution; interactive steps pending)
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
 - **[Context Memory](./docs/cli/context-memory.md)** - Memory modes, JIT + JSON,
   and setup guide
@@ -121,7 +119,7 @@ npm install -g @mmmbuto/gemini-cli-termux@latest
 - Latest report:
   - [`GEMINI_TEST_REPORT_v0.24.0.md`](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
     (partial execution; interactive steps pending). Notes include
-    non‑interactive tool confirmation limits and Termux shell parser warnings.
+    non‑interactive tool confirmation limits.
 
 ## Termux-API Integration
 
