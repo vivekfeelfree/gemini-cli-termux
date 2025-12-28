@@ -70,6 +70,8 @@ node bundle/gemini.js --version
   - [GEMINI_TEST_REPORT_v0.22.2.md](./GEMINI_TEST_REPORT_v0.22.2.md) — stable
     baseline
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
+- **[Context Memory](./docs/cli/context-memory.md)** - Memory modes, JIT + JSON,
+  and setup guide
 - **[Patches & Fixes](./docs/patches/)** - Known issues and workarounds
 
 ### 🔧 Common Issues & Solutions
