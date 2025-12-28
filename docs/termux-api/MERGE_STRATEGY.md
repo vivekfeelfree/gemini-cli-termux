@@ -1,13 +1,16 @@
 # Merge Strategy - Upstream Sync
 
-**Project**: gemini-cli-termux **Author**: DioNanos **Date**: 2025-12-17
+**Project**: gemini-cli-termux  
+**Author**: DioNanos  
+**Last updated**: 2025-12-28  
+**Scope**: Version-agnostic strategy for maintaining all Termux patches
 
 ---
 
 ## Overview
 
-Strategy for maintaining Termux patches easily applicable after each merge with
-the upstream `google-gemini/gemini-cli`.
+Strategy for keeping Termux patches merge-safe and easy to re-apply after each
+sync with upstream `google-gemini/gemini-cli`.
 
 ---
 
@@ -35,19 +38,21 @@ All Termux modifications must be:
 ```
 gemini-cli-termux/
 ├── packages/core/src/
-│   ├── utils/
-│   │   └── termux-detect.ts     # NEW - no conflicts
-│   │   └── contextMemory.ts     # NEW - Termux context memory logic
-│   └── index.ts                  # Minimal EDIT - 2 export lines
+│   ├── utils/termux-detect.ts        # NEW - no conflicts
+│   ├── utils/contextMemory.ts        # NEW - JSON memory + journal
+│   ├── services/contextManager.ts    # EDIT - JIT + JSON wiring
+│   └── tools/shell.ts                # EDIT - TTS guard
+├── packages/cli/src/config/
+│   ├── settingsSchema.ts             # EDIT - Memory Mode settings
+│   └── config.ts                     # EDIT - Memory Mode logic
 ├── scripts/
-│   ├── postinstall.js           # NEW - no conflicts
-│   ├── termux-setup.sh          # NEW - no conflicts
-│   └── termux-tools/            # NEW - no conflicts
-│       ├── discovery.sh
-│       └── call.sh
-├── esbuild.config.js            # EDIT - banner (isolated)
-├── package.json                 # EDIT - scripts.postinstall, dist-tags
-└── Makefile                     # EDIT - additional targets
+│   ├── postinstall.cjs               # NEW - no conflicts
+│   ├── termux-setup.sh               # NEW - no conflicts
+│   ├── termux-tools/                 # NEW - no conflicts
+│   └── check-termux-patches.sh       # NEW - verification script
+├── esbuild.config.js                 # EDIT - banner (polyfills + Termux)
+├── package.json                      # EDIT - postinstall + Termux config
+└── README.md                          # EDIT - Termux docs
 ```
 
 ---
@@ -76,20 +81,27 @@ Likely conflict files:
 - `package.json` - Resolve by keeping our scripts
 - `esbuild.config.js` - Resolve by keeping our banner
 - `packages/core/src/index.ts` - Resolve by keeping our exports
+- `packages/cli/src/config/settingsSchema.ts` - Keep Memory Mode settings
+- `packages/cli/src/config/config.ts` - Keep Memory Mode mapping logic
+- `packages/core/src/services/contextManager.ts` - Keep JIT + JSON wiring
+- `packages/core/src/utils/contextMemory.ts` - Keep JSON memory logic
+- `packages/core/src/tools/shell.ts` - Keep TTS guard
 
 ### Step 4: Verify patches intact
 
 ```bash
 # Check that our files still exist
 ls -la packages/core/src/utils/termux-detect.ts
-ls -la scripts/postinstall.js
+ls -la packages/core/src/utils/contextMemory.ts
+ls -la scripts/postinstall.cjs
 ls -la scripts/termux-setup.sh
 ls -la scripts/termux-tools/
 
 # Check that modifications are present
-grep "TERMUX__PREFIX" esbuild.config.js
+grep "TERMUX PATCH" esbuild.config.js
 grep "postinstall" package.json
 grep "termux-detect" packages/core/src/index.ts
+grep "memory.mode" packages/cli/src/config/settingsSchema.ts
 ```
 
 ### Step 5: Build test
@@ -122,7 +134,7 @@ git commit -m "merge: upstream vX.Y.Z + Termux patches"
 {
   "scripts": {
     // ... upstream scripts ...
-    "postinstall": "node scripts/postinstall.js || true" // TERMUX PATCH
+    "postinstall": "node scripts/postinstall.cjs || true" // TERMUX PATCH
   }
 }
 ```
@@ -137,9 +149,15 @@ git commit -m "merge: upstream vX.Y.Z + Termux patches"
 banner: {
   js: `/* UPSTREAM BANNER */
 // TERMUX PATCH START
+// Base64 polyfill for web-tree-sitter (Node 22/24)
+if (typeof Uint8Array.fromBase64 !== 'function') { /* ... */ }
+if (typeof Uint8Array.prototype.toBase64 !== 'function') { /* ... */ }
+// Clipboardy Termux detection
 if (process.platform === 'android' && process.env.PREFIX && !process.env.TERMUX__PREFIX) {
   process.env.TERMUX__PREFIX = process.env.PREFIX;
 }
+// Punycode deprecation warning suppression
+if (process.platform === 'android') { /* ... */ }
 // TERMUX PATCH END
 `,
 },
@@ -156,20 +174,21 @@ if (process.platform === 'android' && process.env.PREFIX && !process.env.TERMUX_
 
 // TERMUX PATCH
 export * from './utils/termux-detect.js';
-export * from './utils/contextMemory.js';
+```
 
-### Context memory safety
+### Context memory + Memory Mode
 
-- Keep `contextMemory.ts` additive; if upstream adds similar logic, retain
-  Termux fields `allowBaseWrite`, runtime setters, key/TTL guards, sensitivity
-  filter, and incremental journal processing.
+- `packages/core/src/utils/contextMemory.ts` implements JSON memories and
+  journal compaction.
+- `packages/core/src/services/contextManager.ts` wires JIT + JSON.
+- `packages/cli/src/config/settingsSchema.ts` + `config.ts` add Memory Mode
+  settings and mapping logic.
 
 ### Shell / TTS guard
 
 - `packages/core/src/tools/shell.ts` contains a guard to block
   `termux-tts-speak` when `notifications.ttsEnabled` is false. Re-apply after
   merges if the shell tool changes.
-```
 
 ---
 
@@ -192,10 +211,11 @@ ERRORS=0
 # Check file existence
 FILES=(
   "packages/core/src/utils/termux-detect.ts"
-  "scripts/postinstall.js"
+  "scripts/postinstall.cjs"
   "scripts/termux-setup.sh"
   "scripts/termux-tools/discovery.sh"
   "scripts/termux-tools/call.sh"
+  "scripts/check-termux-patches.sh"
 )
 
 for f in "${FILES[@]}"; do
@@ -208,8 +228,8 @@ for f in "${FILES[@]}"; do
 done
 
 # Check key contents
-if grep -q "TERMUX__PREFIX" esbuild.config.js; then
-  echo "✓ esbuild.config.js has TERMUX patch"
+if grep -q "TERMUX PATCH" esbuild.config.js; then
+  echo "✓ esbuild.config.js has TERMUX patches"
 else
   echo "✗ esbuild.config.js MISSING TERMUX patch"
   ERRORS=$((ERRORS + 1))
@@ -226,6 +246,13 @@ if grep -q "termux-detect" packages/core/src/index.ts; then
   echo "✓ core/index.ts has termux-detect export"
 else
   echo "✗ core/index.ts MISSING termux-detect export"
+  ERRORS=$((ERRORS + 1))
+fi
+
+if grep -q "termux-install" Makefile; then
+  echo "✓ Makefile has termux-install target"
+else
+  echo "✗ Makefile MISSING termux-install target"
   ERRORS=$((ERRORS + 1))
 fi
 
@@ -254,17 +281,20 @@ bash scripts/check-termux-patches.sh || echo "WARNING: Termux patches need atten
 
 ### Files to monitor
 
-| Upstream File                | Impact | Action         |
-| ---------------------------- | ------ | -------------- |
-| `package.json`               | High   | Verify scripts |
-| `esbuild.config.js`          | High   | Verify banner  |
-| `packages/core/src/index.ts` | Medium | Verify exports |
-| `packages/core/src/tools/*`  | Low    | No action      |
-| `packages/cli/*`             | Low    | No action      |
+| Upstream File                                  | Impact | Action                      |
+| ---------------------------------------------- | ------ | --------------------------- |
+| `esbuild.config.js`                            | High   | Verify banner patches       |
+| `package.json`                                 | High   | Verify postinstall + config |
+| `packages/cli/src/config/settingsSchema.ts`    | High   | Memory Mode settings        |
+| `packages/core/src/services/contextManager.ts` | High   | JIT + JSON wiring           |
+| `packages/core/src/utils/contextMemory.ts`     | High   | JSON memory logic           |
+| `packages/core/src/tools/shell.ts`             | Medium | TTS guard                   |
+| `packages/core/src/index.ts`                   | Medium | termux-detect export        |
+| `scripts/termux-tools/*`                       | Low    | Termux-API tools            |
 
 ### Changelog Tracking
 
-Keep note of integrated upstream versions:
+Keep note of integrated upstream versions (update as you merge):
 
 ```
 docs/termux-api/UPSTREAM_TRACKING.md
@@ -273,10 +303,11 @@ docs/termux-api/UPSTREAM_TRACKING.md
 ```markdown
 # Upstream Tracking
 
-| Version        | Date       | Notes              |
-| -------------- | ---------- | ------------------ |
-| 0.21.0-nightly | 2025-12-12 | Initial fork base  |
-| 0.22.0-nightly | 2025-12-17 | Synced, patches ok |
+| Version        | Date       | Notes                           |
+| -------------- | ---------- | ------------------------------- |
+| 0.21.0-nightly | 2025-12-12 | Initial fork base               |
+| 0.22.0-nightly | 2025-12-17 | Synced, patches ok              |
+| 0.24.0-nightly | 2025-12-27 | Synced, Memory Mode + shell fix |
 ```
 
 ---
