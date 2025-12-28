@@ -77,7 +77,10 @@ const cliConfig = {
   ...baseConfig,
   // TERMUX PATCH: Removed keepNames - was causing FileDiscoveryService → FileDiscoveryService2 rename
   banner: {
-    js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);
+    js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); const { Buffer } = require('buffer'); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);
+// TERMUX PATCH: Uint8Array base64 polyfill for web-tree-sitter on Node 22/24
+if (typeof Uint8Array.fromBase64 !== 'function') { Uint8Array.fromBase64 = (base64, _options) => { const buf = Buffer.from(base64, 'base64'); return new Uint8Array(buf.buffer, buf.byteOffset, buf.byteLength); }; }
+if (typeof Uint8Array.prototype.toBase64 !== 'function') { Uint8Array.prototype.toBase64 = function (_options) { return Buffer.from(this).toString('base64'); }; }
 // TERMUX PATCH: clipboardy expects TERMUX__PREFIX but Termux sets PREFIX
 if (process.platform === 'android' && process.env.PREFIX && !process.env.TERMUX__PREFIX) { process.env.TERMUX__PREFIX = process.env.PREFIX; }
 // TERMUX PATCH: Suppress punycode deprecation warning on Android
