@@ -368,7 +368,7 @@ export async function parseArguments(settings: Settings): Promise<CliArgs> {
   }
 
   yargsInstance
-    .version(process.env['CLI_VERSION'] || '0.24.0-termux') // TERMUX PATCH: Use CLI_VERSION directly to avoid tree-shaking issues
+    .version(process.env['CLI_VERSION'] || '0.24.2-termux') // TERMUX PATCH: Use CLI_VERSION directly to avoid tree-shaking issues
     .alias('v', 'version')
     .help()
     .alias('h', 'help')

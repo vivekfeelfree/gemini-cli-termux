@@ -51,7 +51,7 @@ const mockedExecSync = vi.mocked(childProcess.execSync);
 describe('getInstallationInfo', () => {
   const projectRoot = '/path/to/project';
   let originalArgv: string[];
-  const defaultPackageName = '@google/gemini-cli';
+  const defaultPackageName = '@mmmbuto/gemini-cli-termux';
 
   beforeEach(() => {
     vi.resetAllMocks();
@@ -335,7 +335,7 @@ describe('getInstallationInfo', () => {
     const forkPackageName = '@mmmbuto/gemini-cli-termux';
     mockedGetPackageJson.mockResolvedValue({
       name: forkPackageName,
-      version: '0.24.1-termux',
+      version: '0.24.2-termux',
     });
 
     const globalPath = `/usr/local/bin/gemini`;
@@ -355,7 +355,7 @@ describe('getInstallationInfo', () => {
     const forkPackageName = '@mmmbuto/gemini-cli-termux';
     mockedGetPackageJson.mockResolvedValue({
       name: forkPackageName,
-      version: '0.24.1-termux',
+      version: '0.24.2-termux',
     });
 
     const pnpmPath = `/Users/test/.pnpm/global/5/node_modules/.pnpm/some-hash/node_modules/@mmmbuto/gemini-cli-termux/dist/index.js`;
@@ -374,7 +374,7 @@ describe('getInstallationInfo', () => {
     const forkPackageName = '@mmmbuto/gemini-cli-termux';
     mockedGetPackageJson.mockResolvedValue({
       name: forkPackageName,
-      version: '0.24.1-termux',
+      version: '0.24.2-termux',
     });
 
     const yarnPath = `/Users/test/.yarn/global/node_modules/@mmmbuto/gemini-cli-termux/dist/index.js`;
@@ -395,7 +395,7 @@ describe('getInstallationInfo', () => {
     const forkPackageName = '@mmmbuto/gemini-cli-termux';
     mockedGetPackageJson.mockResolvedValue({
       name: forkPackageName,
-      version: '0.24.1-termux',
+      version: '0.24.2-termux',
     });
 
     const bunPath = `/Users/test/.bun/bin/gemini`;

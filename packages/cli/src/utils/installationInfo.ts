@@ -46,9 +46,9 @@ export interface InstallationInfo {
 async function getPackageName(): Promise<string> {
   try {
     const packageJson = await getPackageJson(__dirname);
-    return packageJson?.name || '@google/gemini-cli';
+    return packageJson?.name || '@mmmbuto/gemini-cli-termux';
   } catch {
-    return '@google/gemini-cli';
+    return '@mmmbuto/gemini-cli-termux';
   }
 }
 

@@ -29,7 +29,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs-lts -y
 npm install -g @mmmbuto/gemini-cli-termux
 
-gemini --version  # expected: 0.22.0-termux (latest)
+gemini --version  # expected: 0.24.2-termux (npm latest)
 ```
 
 Build from source:
@@ -46,9 +46,8 @@ node bundle/gemini.js --version
 
 - **Smart Clipboard:** Auto-detects Android environment to enable seamless
   clipboard operations (fixes `TERMUX__PREFIX`).
-- **Streamlined Install:** Native modules (`node-pty`, `keytar`,
-  `tree-sitter-bash`) are handled gracefully to ensure instant installation
-  without compilation errors.
+- **Streamlined Install:** Native PTY/keychain deps are **omitted** on Termux
+  (fallback to `child_process` + file-based tokens), avoiding native builds.
 - **Clean UX:** Suppresses desktop-centric warnings (like home directory checks)
   to optimize the experience for mobile terminal usage.
 - **ARM64 Native:** Bundled specifically for Android architecture.
@@ -65,9 +64,12 @@ node bundle/gemini.js --version
 
 ### 📚 Complete Documentation
 
-- **[Test Results](./GEMINI_TEST_REPORT_v0.22.0.md)** - Comprehensive test
-  report with analysis
+- **Test Results**
+  - [GEMINI_TEST_REPORT_v0.24.0.md](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
+    (partial execution; interactive steps pending)
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
+- **[Context Memory](./docs/cli/context-memory.md)** - Memory modes, JIT + JSON,
+  and setup guide
 - **[Patches & Fixes](./docs/patches/)** - Known issues and workarounds
 
 ### 🔧 Common Issues & Solutions
@@ -103,29 +105,40 @@ See [docs/patches/README.md](./docs/patches/README.md) for complete solutions.
 npm install -g @mmmbuto/gemini-cli-termux@latest
 ```
 
-### Versions
+### Changelog (0.24.2-termux)
 
-- **latest**: 0.22.0-termux (this build)
-- **stable**: 0.22.0-termux
+- **Auto-update fix**: uses the fork package name to prevent upstream overwrite.
+- **Memory Mode presets** in `/settings → Memory` (default / jit / jit+json).
+- **JIT + JSON** combined memory support (ContextManager now loads JSON memory).
+- **Memory settings reorganized** into a dedicated section; MCP import
+  categories hidden from UI.
+- **Docs & tests refreshed** for 0.24.0-termux.
+- **README cleanup**: legacy 0.22.x release sections removed.
 
 ## Tests
 
 - Suite: [`GEMINI_TEST_SUITE.md`](./GEMINI_TEST_SUITE.md)
 - Latest report:
-  [`GEMINI_TEST_REPORT_v0.22.0.md`](./GEMINI_TEST_REPORT_v0.22.0.md)
-  - PASS with warnings (node-pty optional missing log; `--version --json`
-    outputs plain string; config-path flag unsupported; extensions settings
-    needs subcommand).
-  - Non-interactive/file tests executed via agent; Termux checks pass;
-    package/bundle verified.
-  - Optional native modules (node-pty, keytar, tree-sitter-bash) not built on
-    Termux → warnings expected; CLI remains functional.
+  - [`GEMINI_TEST_REPORT_v0.24.0.md`](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
+    (partial execution; interactive steps pending). Notes include
+    non‑interactive tool confirmation limits.
 
-## Termux-API Integration (NEW!)
+## Termux-API Integration
 
 This fork supports optional integration with Termux-API commands for Android
 device access. Enable Gemini to interact with your device hardware and Android
 features.
+
+## Context memory + TTS note:
+
+- The Termux fork ships JSON context memory at
+  `~/.gemini/context_memory/{base.json,user.json,user.journal.jsonl}`. In
+  `/settings → Memory` you can select **Memory Mode** (default / jit / jit+json)
+  and adjust Context Memory options (autoload, primary ordering, base writes).
+- TTS notifications are controlled by
+  `/settings → Notifications → Enable TTS Notifications`. When disabled,
+  `termux-tts-speak` is blocked even if an agent asks for it. These behaviors
+  are merge-safe and confined to Termux patches.
 
 ### Quick Setup
 
@@ -155,41 +168,6 @@ Battery, Clipboard, Toast, Notifications, TTS, Vibrate, Torch, WiFi info,
 Location, Camera, Dialog, Share, and more.
 
 See [docs/termux-api/](./docs/termux-api/) for complete documentation.
-
----
-
-## v0.22.1-termux Improvements
-
-This release includes significant improvements to the Termux experience:
-
-### Installation
-
-- **Clear postinstall message** - No more confusion about native module warnings
-- **`make termux-install`** - One-command build from source
-- **`termux-setup.sh`** - Helper script for first-time setup
-
-### Developer Experience
-
-- **Termux detection utility** - `isTermux()` and `detectTermuxEnvironment()`
-- **Punycode warning suppression** - Cleaner output on Android
-- **Merge-safe patches** - Easy to maintain after upstream sync
-- **`check-termux-patches.sh`** - Verify patches after merge
-
-### Documentation
-
-- Complete Termux-API integration plan
-- 60+ commands documented with parameters
-- Merge strategy guide for maintainers
-
----
-
-## Changelog (Termux)
-
-- **0.22.1-termux**: Termux-API integration, improved installation UX, Termux
-  detection utility, merge automation scripts.
-- **0.22.0-termux**: Sync with upstream (0.21.0-nightly); added hide banner
-  patch; restored ARM64 dependency.
-- **0.21.4-termux**: (Previous)
 
 ## Upstream Tracking
 

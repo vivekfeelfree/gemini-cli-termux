@@ -29,7 +29,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs-lts -y
 npm install -g @mmmbuto/gemini-cli-termux
 
-gemini --version  # expected: 0.24.1-termux (npm latest)
+gemini --version  # expected: 0.24.2-termux (npm latest)
 ```
 
 Build from source:
@@ -105,8 +105,9 @@ See [docs/patches/README.md](./docs/patches/README.md) for complete solutions.
 npm install -g @mmmbuto/gemini-cli-termux@latest
 ```
 
-### Changelog (0.24.1-termux)
+### Changelog (0.24.2-termux)
 
+- **Auto-update fix**: uses the fork package name to prevent upstream overwrite.
 - **Memory Mode presets** in `/settings → Memory` (default / jit / jit+json).
 - **JIT + JSON** combined memory support (ContextManager now loads JSON memory).
 - **Memory settings reorganized** into a dedicated section; MCP import
