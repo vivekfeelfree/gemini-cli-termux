@@ -213,7 +213,7 @@ class MemoryToolInvocation extends BaseToolInvocation<
 
   constructor(
     params: SaveMemoryParams,
-    messageBus?: MessageBus,
+    messageBus: MessageBus,
     toolName?: string,
     displayName?: string,
   ) {
@@ -314,9 +314,6 @@ class MemoryToolInvocation extends BaseToolInvocation<
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      console.warn(
-        `[MemoryTool] Error executing save_memory for fact "${fact}": ${errorMessage}`,
-      );
       return {
         llmContent: JSON.stringify({
           success: false,
@@ -338,16 +335,16 @@ export class MemoryTool
 {
   static readonly Name = MEMORY_TOOL_NAME;
 
-  constructor(messageBus?: MessageBus) {
+  constructor(messageBus: MessageBus) {
     super(
       MemoryTool.Name,
       'SaveMemory',
       memoryToolDescription,
       Kind.Think,
       memoryToolSchemaData.parametersJsonSchema as Record<string, unknown>,
+      messageBus,
       true,
       false,
-      messageBus,
     );
   }
 
@@ -369,13 +366,13 @@ export class MemoryTool
 
   protected createInvocation(
     params: SaveMemoryParams,
-    messageBus?: MessageBus,
+    messageBus: MessageBus,
     toolName?: string,
     displayName?: string,
   ) {
     return new MemoryToolInvocation(
       params,
-      messageBus ?? this.messageBus,
+      messageBus,
       toolName ?? this.name,
       displayName ?? this.displayName,
     );
@@ -435,10 +432,6 @@ export class MemoryTool
         );
       }
     } catch (error) {
-      console.error(
-        `[MemoryTool] Error adding memory entry to ${memoryFilePath}:`,
-        error,
-      );
       throw new Error(
         `[MemoryTool] Failed to add memory entry: ${error instanceof Error ? error.message : String(error)}`,
       );
