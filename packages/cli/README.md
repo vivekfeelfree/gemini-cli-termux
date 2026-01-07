@@ -29,7 +29,7 @@ pkg update && pkg upgrade -y
 pkg install nodejs-lts -y
 npm install -g @mmmbuto/gemini-cli-termux
 
-gemini --version  # expected: 0.24.2-termux (npm latest)
+gemini --version  # expected: 0.24.3-termux (npm latest)
 ```
 
 Build from source:
@@ -65,7 +65,7 @@ node bundle/gemini.js --version
 ### 📚 Complete Documentation
 
 - **Test Results**
-  - [GEMINI_TEST_REPORT_v0.24.0.md](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
+  - [GEMINI_TEST_REPORT_v0.24.3.md](./GEMINI_TEST_REPORT_v0.24.3.md) — PASS
     (partial execution; interactive steps pending)
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
 - **[Context Memory](./docs/cli/context-memory.md)** - Memory modes, JIT + JSON,
@@ -105,21 +105,17 @@ See [docs/patches/README.md](./docs/patches/README.md) for complete solutions.
 npm install -g @mmmbuto/gemini-cli-termux@latest
 ```
 
-### Changelog (0.24.2-termux)
+### Changelog (0.24.3-termux)
 
-- **Auto-update fix**: uses the fork package name to prevent upstream overwrite.
-- **Memory Mode presets** in `/settings → Memory` (default / jit / jit+json).
-- **JIT + JSON** combined memory support (ContextManager now loads JSON memory).
-- **Memory settings reorganized** into a dedicated section; MCP import
-  categories hidden from UI.
-- **Docs & tests refreshed** for 0.24.0-termux.
-- **README cleanup**: legacy 0.22.x release sections removed.
+- **Upstream merge**: v0.25.0-nightly integrated with Termux patches preserved.
+- **Build fixes**: MessageBus import compatibility + `@types/js-yaml` added.
+- **Docs/tests**: new test report for v0.24.3-termux.
 
 ## Tests
 
 - Suite: [`GEMINI_TEST_SUITE.md`](./GEMINI_TEST_SUITE.md)
 - Latest report:
-  - [`GEMINI_TEST_REPORT_v0.24.0.md`](./GEMINI_TEST_REPORT_v0.24.0.md) — PASS
+  - [`GEMINI_TEST_REPORT_v0.24.3.md`](./GEMINI_TEST_REPORT_v0.24.3.md) — PASS
     (partial execution; interactive steps pending). Notes include
     non‑interactive tool confirmation limits.
 
