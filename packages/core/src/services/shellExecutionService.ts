@@ -66,7 +66,11 @@ export interface ShellExecutionResult {
   /** The process ID of the spawned shell. */
   pid: number | undefined;
   /** The method used to execute the shell command. */
-  executionMethod: 'mmmbuto-node-pty' | 'child_process' | 'none';
+  executionMethod:
+    | 'mmmbuto-node-pty'
+    | 'lydell-node-pty-linux-arm64'
+    | 'child_process'
+    | 'none';
 }
 
 /** A handle for an ongoing shell execution. */
@@ -366,7 +370,7 @@ export class ShellExecutionService {
             error,
             aborted: abortSignal.aborted,
             pid: undefined,
-            executionMethod: 'child_process',
+            executionMethod: 'child_process', // Fallback to child_process,
           });
         };
 
