@@ -1,6 +1,6 @@
 {
   "name": "@mmmbuto/gemini-cli-termux",
-  "version": "0.24.6-termux",
+  "version": "0.24.7-termux",
   "description": "Gemini CLI - Termux Edition",
   "license": "Apache-2.0",
   "repository": {
