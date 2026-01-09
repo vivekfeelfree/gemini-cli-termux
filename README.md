@@ -166,10 +166,6 @@ See [docs/termux-api/](./docs/termux-api/) for complete documentation.
 - Divergent files: `esbuild.config.js`, `docs/TERMUX.md`, `package.json`,
   `README.md`, `test-gemini/*`
 
-## License
-
-Apache 2.0 (same as upstream). See LICENSE.
-
 ## PTY Support (Shared Library)
 
 This project uses `@mmmbuto/pty-termux-utils` as a shared library for PTY
@@ -186,3 +182,7 @@ management across all Termux CLI projects (Gemini, Qwen, Nexus).
 # Enable PTY debug logging
 PTY_DEBUG=1 gemini "your prompt"
 ```
+
+## License
+
+Apache 2.0 (same as upstream). See LICENSE.
