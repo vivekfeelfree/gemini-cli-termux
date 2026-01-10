@@ -65,7 +65,7 @@ node bundle/gemini.js --version
 ### 📚 Complete Documentation
 
 - **Test Results**
-  - [GEMINI_TEST_REPORT_v0.24.9.md](./GEMINI_TEST_REPORT_v0.24.9.md) — PASS
+  - [GEMINI_TEST_REPORT_v0.24.10.md](./GEMINI_TEST_REPORT_v0.24.9.md) — PASS
     (latest report; 0.24.10-termux)
 - **[Test Suite](./GEMINI_TEST_SUITE.md)** - Test methodology and checklist
 - **[Context Memory](./docs/cli/context-memory.md)** - Memory modes, JIT + JSON,
