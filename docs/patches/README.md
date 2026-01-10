@@ -1,15 +1,16 @@
-# Termux Patches (Upstream Differences)
+# Termux Patches (Upstream Differences) - v0.24.9-termux
 
 This document lists **all patches** that differentiate this Termux fork from
-upstream `google-gemini/gemini-cli`. It is not tied to a specific release; keep
-it updated whenever a new patch is added or removed.
+upstream `google-gemini/gemini-cli` (as of v0.24.9-termux). Keep it updated
+whenever a new patch is added or removed.
 
 ## Patch List
 
 1. **Clipboard (TERMUX\_\_PREFIX)** – On Termux set `TERMUX__PREFIX` from
    `$PREFIX` so clipboardy detects Termux correctly.
-2. **Android PTY prebuild** – Use `@mmmbuto/node-pty-android-arm64` for Termux;
-   remove `@lydell/node-pty-*` and generic `node-pty`.
+2. **Android PTY prebuild** – Use `@mmmbuto/node-pty-android-arm64@~1.1.0` for
+   Termux (moved to dependencies for auto-install); removed `@lydell/node-pty-*`
+   and generic `node-pty`.
 3. **Prepare script** – `prepare` is a no-op on Termux to avoid unnecessary
    bundle/husky work during installs.
 4. **Core exports** – `packages/core/src/index.ts` re-exports stdio utilities,
@@ -23,14 +24,21 @@ it updated whenever a new patch is added or removed.
 9. **Postinstall message** – Clear success message on Termux install.
 10. **Context memory + Memory Mode** – JSON memories (base/user/journal) plus
     presets: `default`, `jit`, `jit+json`. Auto-load toggles, primary selector,
-    and MCP import tool (disabled by default; base writes still gated).
+    and MCP import tool (disabled by default; base writes still gated). See
+    [CONTEXT_MEMORY_COMPARISON.md](./CONTEXT_MEMORY_COMPARISON.md) for details.
 11. **Mobile-first settings** – Compact `/settings` rendering by default on
     Termux; TTS toggle exposed (opt-in).
 12. **Shell parser fix** – Base64 polyfill in bundle banner to support
     web-tree-sitter on Node 22/24 (fixes `run_shell_command`).
 13. **MCP SDK typings shim** – Local `.d.ts` shims for
-    `@modelcontextprotocol/sdk` to satisfy strict builds.
-    [Details](./mcp-sdk-typings-shim.md)
+    `@modelcontextprotocol/sdk` to satisfy strict builds. See
+    [mcp-sdk-typings-shim.md](./mcp-sdk-typings-shim.md) for details.
+14. **Built-in Agent Skills** – New upstream feature integrated and tested on
+    Termux.
+15. **Tool modifier system** – New upstream feature integrated and tested on
+    Termux.
+16. **File diff utilities** – New upstream feature integrated and tested on
+    Termux.
 
 ## Expected Warnings
 
