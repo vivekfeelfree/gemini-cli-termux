@@ -37,6 +37,24 @@ downloading the Gemini CLI package from the NPM registry.
   npx @google/gemini-cli
   ```
 
+### 1a. Installation on Android (Termux)
+
+For Android users via Termux, use the optimized fork which handles platform-specifics like clipboard access and native PTY support.
+
+```bash
+# Install dependencies
+pkg update && pkg upgrade -y
+pkg install nodejs-lts -y
+
+# Install the Termux edition
+npm install -g @mmmbuto/gemini-cli-termux
+
+# Run
+gemini
+```
+
+See [Termux Documentation](../TERMUX.md) for more details.
+
 ### 2. Run in a sandbox (Docker/Podman)
 
 For security and isolation, Gemini CLI can be run inside a container. This is

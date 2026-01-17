@@ -161,6 +161,22 @@ screen.
 This section guides contributors on how to build, modify, and understand the
 development setup of this project.
 
+#### Developing on Termux
+
+This fork is optimized for Android/Termux. There are specific requirements and steps for developing in this environment.
+
+**Prerequisites:**
+- `clang`, `make`, `python` (install via `pkg install clang make python`)
+- Node.js 20+
+
+**Setup:**
+1. Clone the repository.
+2. Run `make termux-install` to install dependencies and build the project with the correct native flags.
+   Note: `packages/vscode-ide-companion` is disabled in this fork to avoid incompatibility.
+
+**Running:**
+- Use the `./gemini-termux` script to run your local build.
+
 ### Setting up the development environment
 
 **Prerequisites:**

@@ -7,7 +7,7 @@ Android.
 
 - Termux installed
 - Node.js 20+ (`pkg install nodejs-lts -y`)
-- Git (only if building from source)
+- For building from source: `pkg install clang make python git -y`
 
 ## Install via npm (recommended)
 
@@ -29,9 +29,12 @@ Features of the npm build
 ```bash
 git clone https://github.com/DioNanos/gemini-cli-termux.git
 cd gemini-cli-termux
-npm install
-npm run build && npm run bundle
-node bundle/gemini.js --version
+
+# Build and install dependencies
+make termux-install
+
+# Run
+./gemini-termux --version
 ```
 
 ## Known issues

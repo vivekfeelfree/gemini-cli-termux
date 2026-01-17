@@ -35,11 +35,18 @@ gemini --version  # expected: 0.24.10-termux (npm latest)
 Build from source:
 
 ```bash
+# 1. Install build dependencies
+pkg install clang make python -y
+
+# 2. Clone the repository
 git clone https://github.com/DioNanos/gemini-cli-termux.git
 cd gemini-cli-termux
-npm install
-npm run build && npm run bundle
-node bundle/gemini.js --version
+
+# 3. Build and install
+make termux-install
+
+# 4. Run
+./gemini-termux --version
 ```
 
 ## Termux Optimizations
