@@ -35,7 +35,7 @@ gemini --version  # expected: 0.24.6-termux (npm latest)
 Build from source:
 
 ```bash
-git clone https://github.com/DioNanos/gemini-cli-termux.git
+git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
 cd gemini-cli-termux
 npm install
 npm run build && npm run bundle

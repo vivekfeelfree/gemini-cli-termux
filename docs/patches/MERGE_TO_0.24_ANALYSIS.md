@@ -60,7 +60,7 @@ preservate.
   "name": "@mmmbuto/gemini-cli-termux",
   "version": "0.24.0-termux",
   "repository": {
-    "url": "https://github.com/DioNanos/gemini-cli-termux.git"
+    "url": "https://github.com/vivekfeelfree/gemini-cli-termux.git"
   },
   "scripts": {
     // ... upstream scripts ...
