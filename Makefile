@@ -61,11 +61,11 @@ create-alias:
 # TERMUX PATCH: Termux-specific targets
 termux-install:
 	@echo "=== Installing for Termux ==="
-	npm install
+	export GYP_DEFINES="OS=android android_ndk_path=." && npm install --no-optional
 	npm run build
 	npm run bundle
 	@echo ""
-	@echo "Done! Run: node bundle/gemini.js"
+	@echo "Done! Run: ./gemini-termux"
 
 termux-clean:
 	rm -rf node_modules

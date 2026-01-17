@@ -1,0 +1,5 @@
+#!/bin/bash
+# Wrapper script to run the local Termux build of Gemini CLI
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+node "$DIR/bundle/gemini.js" "$@"
