@@ -1,28 +1,29 @@
-# Gemini CLI – Termux Guide
+# Gemini CLI on Termux (vivekfeelfree fork)
 
-How to install and run the Termux edition `@mmmbuto/gemini-cli-termux` on
+How to install and run the Termux edition of Gemini CLI on
 Android.
 
-## Prerequisites
+## Quick Install (Source)
 
-- Termux installed
-- Node.js 20+ (`pkg install nodejs-lts -y`)
-- For building from source: `pkg install clang make python git -y`
+Since this is a fork, building from source is the recommended way to get the latest changes from `vivekfeelfree`.
 
-## Install via npm (recommended)
+```bash
+# Install dependencies
+pkg install git nodejs-lts python make clang -y
+
+# Clone and build
+git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
+cd gemini-cli-termux
+make termux-install
+```
+
+## Manual Install (npm upstream)
+
+If you wish to use the original port by `mmmbuto`:
 
 ```bash
 npm install -g @mmmbuto/gemini-cli-termux
-
-gemini --version
-# expected: 0.24.6-termux (latest)
 ```
-
-Features of the npm build
-
-- ARM64/Android bundle included
-- Termux clipboard patch (`PREFIX` -> `TERMUX__PREFIX`)
-- PTY prebuild via `@mmmbuto/node-pty-android-arm64` (no NDK required)
 
 ## Build from source (Termux fork)
 

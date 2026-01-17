@@ -2,6 +2,7 @@
 # TERMUX PATCH: Termux-API Tool Call dispatcher for Gemini CLI
 # Usage: call.sh <tool_name> < params.json
 # Author: DioNanos
+# Maintainer: Vivek Rajaselvam
 
 TOOL_NAME="$1"
 

@@ -1,11 +1,10 @@
-# 🤖 Gemini CLI – Termux Edition
+# 🤖 Gemini CLI – Termux Edition (Fork)
+
+**Maintained by [vivekfeelfree](https://github.com/vivekfeelfree)**
+*Original port by [DioNanos](https://github.com/DioNanos)*
 
 Android/Termux optimized fork of Google Gemini CLI. Installs cleanly on Termux
 with a native ARM64 PTY prebuild and clipboard detection for Termux.
-
-[![npm](https://img.shields.io/npm/v/@mmmbuto/gemini-cli-termux?style=flat-square&logo=npm)](https://www.npmjs.com/package/@mmmbuto/gemini-cli-termux)
-[![downloads](https://img.shields.io/npm/dt/@mmmbuto/gemini-cli-termux?style=flat-square)](https://www.npmjs.com/package/@mmmbuto/gemini-cli-termux)
-[![ko-fi](https://img.shields.io/badge/☕_Support-Ko--fi-FF5E5B?style=flat-square&logo=ko-fi)](https://ko-fi.com/dionanos)
 
 ---
 
@@ -24,21 +23,13 @@ while tracking upstream development closely.
 
 ## Installation (Termux)
 
-```bash
-pkg update && pkg upgrade -y
-pkg install nodejs-lts -y
-npm install -g @mmmbuto/gemini-cli-termux
-
-gemini --version  # expected: 0.24.10-termux (npm latest)
-```
-
-Build from source:
+### From Source (Recommended for this fork)
 
 ```bash
 # 1. Install build dependencies
-pkg install clang make python -y
+pkg install clang make python git nodejs-lts -y
 
-# 2. Clone the repository
+# 2. Clone this repository
 git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
 cd gemini-cli-termux
 
@@ -48,6 +39,14 @@ make termux-install
 # 4. Run
 ./gemini-termux --version
 ```
+
+### From npm (Upstream)
+*Note: This installs the original mmmbuto release, not this specific fork.*
+```bash
+npm install -g @mmmbuto/gemini-cli-termux
+```
+
+## Termux Optimizations
 
 ## Termux Optimizations
 

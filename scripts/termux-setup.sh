@@ -1,6 +1,9 @@
-#!/data/data/com.termux/files/usr/bin/bash
-# TERMUX PATCH: Helper script for building from source on Termux
+#!/bin/bash
+# Gemini CLI Termux Setup Script
 # Author: DioNanos
+# Maintainer: Vivek Rajaselvam
+#
+# Helper for setting up the environment on Termux.
 
 set -e
 

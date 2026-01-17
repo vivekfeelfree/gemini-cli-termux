@@ -2,6 +2,7 @@
 # TERMUX PATCH: Termux-API Tool Discovery for Gemini CLI
 # Returns FunctionDeclarations for Termux commands
 # Author: DioNanos
+# Maintainer: Vivek Rajaselvam
 
 cat << 'EOF'
 [

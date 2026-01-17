@@ -1,11 +1,8 @@
-# 🤖 Gemini CLI – Termux Edition
+# 🤖 Gemini CLI – Termux Edition (Fork)
 
-Android/Termux optimized fork of Google Gemini CLI. Installs cleanly on Termux
-with a native ARM64 PTY prebuild and clipboard detection for Termux.
+**Maintained by [vivekfeelfree](https://github.com/vivekfeelfree)**
 
-[![npm](https://img.shields.io/npm/v/@mmmbuto/gemini-cli-termux?style=flat-square&logo=npm)](https://www.npmjs.com/package/@mmmbuto/gemini-cli-termux)
-[![downloads](https://img.shields.io/npm/dt/@mmmbuto/gemini-cli-termux?style=flat-square)](https://www.npmjs.com/package/@mmmbuto/gemini-cli-termux)
-[![ko-fi](https://img.shields.io/badge/☕_Support-Ko--fi-FF5E5B?style=flat-square&logo=ko-fi)](https://ko-fi.com/dionanos)
+Android/Termux optimized fork of Google Gemini CLI.
 
 ---
 
@@ -14,22 +11,16 @@ with a native ARM64 PTY prebuild and clipboard detection for Termux.
 **Optimized Termux edition** of `google-gemini/gemini-cli`.
 
 This project focuses on maintaining a first-class experience for Gemini on
-Android/Termux. It provides critical adaptations for the mobile environment
-while tracking upstream development closely.
+Android/Termux.
 
-- **Termux-First:** Pre-configured for Android filesystem and clipboard.
-- **Lightweight:** Native dependencies managed for ARM64 without complex
-  compilation.
-- **Up-to-Date:** Synchronized with the latest Google Gemini CLI features.
+## Installation
 
-## Installation (Termux)
+### From Source
 
 ```bash
-pkg update && pkg upgrade -y
-pkg install nodejs-lts -y
-npm install -g @mmmbuto/gemini-cli-termux
-
-gemini --version  # expected: 0.24.6-termux (npm latest)
+git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
+cd gemini-cli-termux
+make termux-install
 ```
 
 Build from source:

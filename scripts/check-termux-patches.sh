@@ -1,7 +1,7 @@
 #!/bin/bash
-# TERMUX PATCH: Verify all Termux patches are intact after merge
-# Run this after merging upstream to ensure patches weren't lost
+# Check if critical Termux patches are applied
 # Author: DioNanos
+# Maintainer: Vivek Rajaselvam
 
 set -e
 
