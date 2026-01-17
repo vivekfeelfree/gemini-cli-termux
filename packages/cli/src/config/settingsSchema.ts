@@ -339,6 +339,28 @@ const SETTINGS_SCHEMA = {
       },
     },
   },
+
+  speech: {
+    type: 'object',
+    label: 'Speech',
+    category: 'General',
+    requiresRestart: false,
+    default: {},
+    description: 'Speech and voice settings.',
+    showInDialog: false,
+    properties: {
+      autoSpeak: {
+        type: 'boolean',
+        label: 'Auto-Speak Responses',
+        category: 'General',
+        requiresRestart: false,
+        default: false,
+        description:
+          'Automatically read aloud model responses using termux-tts-speak.',
+        showInDialog: true,
+      },
+    },
+  },
   output: {
     type: 'object',
     label: 'Output',

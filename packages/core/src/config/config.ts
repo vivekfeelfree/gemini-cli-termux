@@ -298,6 +298,9 @@ export interface ConfigParameters {
   notifications?: {
     ttsEnabled?: boolean;
   };
+  speech?: {
+    autoSpeak?: boolean;
+  };
   cwd: string;
   fileDiscoveryService?: FileDiscoveryService;
   includeDirectories?: string[];
@@ -415,6 +418,7 @@ export class Config {
   private modelRouterService: ModelRouterService;
   private readonly modelAvailabilityService: ModelAvailabilityService;
   private readonly ttsEnabled: boolean;
+  private readonly autoSpeak: boolean;
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
     respectGeminiIgnore: boolean;
@@ -554,6 +558,7 @@ export class Config {
     };
     this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
     this.ttsEnabled = params.notifications?.ttsEnabled ?? true;
+    this.autoSpeak = params.speech?.autoSpeak ?? false;
 
     this.fileFiltering = {
       respectGitIgnore:
@@ -1608,6 +1613,10 @@ export class Config {
 
   isTtsEnabled(): boolean {
     return this.ttsEnabled;
+  }
+
+  isAutoSpeakEnabled(): boolean {
+    return this.autoSpeak;
   }
 
   getShellToolInactivityTimeout(): number {
