@@ -195,14 +195,25 @@ export class GeminiClient {
     if (this.config.isAutoSpeakEnabled() && finalResponseText) {
       try {
         const child = spawn('termux-tts-speak', [], {
-          stdio: ['pipe', 'ignore', 'ignore'],
+          stdio: ['pipe', 'ignore', 'pipe'], // Capture stderr
           detached: true,
         });
+        
+        child.on('error', (err) => {
+           debugLogger.error('❌ Auto-speak spawn error:', err);
+        });
+
+        if (child.stderr) {
+            child.stderr.on('data', (data) => {
+                debugLogger.error(`❌ TTS stderr: ${data}`);
+            });
+        }
+
         child.stdin.write(finalResponseText);
         child.stdin.end();
         child.unref();
       } catch (e) {
-        debugLogger.error('Failed to auto-speak response', e);
+        debugLogger.error('❌ Failed to auto-speak response (exception):', e);
       }
     }
 
