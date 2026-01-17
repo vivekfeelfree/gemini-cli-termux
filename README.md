@@ -39,7 +39,7 @@ Build from source:
 pkg install clang make python -y
 
 # 2. Clone the repository
-git clone https://github.com/DioNanos/gemini-cli-termux.git
+git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
 cd gemini-cli-termux
 
 # 3. Build and install
@@ -203,3 +203,9 @@ PTY_DEBUG=1 gemini "your prompt"
 ## License
 
 Apache 2.0 (same as upstream). See LICENSE.
+
+## Report Termux issues
+
+Use the fork issues: https://github.com/vivekfeelfree/gemini-cli-termux/issues
+
+Sunset: will deprecate when upstream adds native Termux support.

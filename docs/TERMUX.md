@@ -27,7 +27,7 @@ Features of the npm build
 ## Build from source (Termux fork)
 
 ```bash
-git clone https://github.com/DioNanos/gemini-cli-termux.git
+git clone https://github.com/vivekfeelfree/gemini-cli-termux.git
 cd gemini-cli-termux
 
 # Build and install dependencies
@@ -93,6 +93,6 @@ See [docs/termux-api/](./docs/termux-api/) for complete documentation.
 
 ## Report Termux issues
 
-Use the fork issues: https://github.com/DioNanos/gemini-cli-termux/issues
+Use the fork issues: https://github.com/vivekfeelfree/gemini-cli-termux/issues
 
 Sunset: will deprecate when upstream adds native Termux support.
