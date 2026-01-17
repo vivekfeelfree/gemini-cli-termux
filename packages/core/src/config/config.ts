@@ -101,6 +101,7 @@ import { ExperimentFlags } from '../code_assist/experiments/flagNames.js';
 import { debugLogger } from '../utils/debugLogger.js';
 import { SkillManager, type SkillDefinition } from '../skills/skillManager.js';
 import { startupProfiler } from '../telemetry/startupProfiler.js';
+import { SpeechService } from '../services/speechService.js';
 
 // TERMUX PATCH: Import ContextMemoryOptions for our memory system
 import type { ContextMemoryOptions } from '../utils/contextMemory.js';
@@ -300,6 +301,7 @@ export interface ConfigParameters {
   };
   speech?: {
     autoSpeak?: boolean;
+    style?: 'full' | 'highlights';
   };
   cwd: string;
   fileDiscoveryService?: FileDiscoveryService;
@@ -385,6 +387,7 @@ export class Config {
   private resourceRegistry!: ResourceRegistry;
   private agentRegistry!: AgentRegistry;
   private skillManager!: SkillManager;
+  private speechService: SpeechService;
   private sessionId: string;
   private fileSystemService: FileSystemService;
   private contentGeneratorConfig!: ContentGeneratorConfig;
@@ -419,6 +422,7 @@ export class Config {
   private readonly modelAvailabilityService: ModelAvailabilityService;
   private readonly ttsEnabled: boolean;
   private readonly autoSpeak: boolean;
+  private readonly speechStyle: 'full' | 'highlights';
   private readonly fileFiltering: {
     respectGitIgnore: boolean;
     respectGeminiIgnore: boolean;
@@ -559,6 +563,7 @@ export class Config {
     this.usageStatisticsEnabled = params.usageStatisticsEnabled ?? true;
     this.ttsEnabled = params.notifications?.ttsEnabled ?? true;
     this.autoSpeak = params.speech?.autoSpeak ?? false;
+    this.speechStyle = params.speech?.style ?? 'full';
 
     this.fileFiltering = {
       respectGitIgnore:
@@ -665,6 +670,7 @@ export class Config {
     });
     this.messageBus = new MessageBus(this.policyEngine, this.debugMode);
     this.skillManager = new SkillManager();
+    this.speechService = new SpeechService(this);
     this.outputSettings = {
       format: params.output?.format ?? OutputFormat.TEXT,
     };
@@ -1046,6 +1052,10 @@ export class Config {
 
   getSkillManager(): SkillManager {
     return this.skillManager;
+  }
+
+  getSpeechService(): SpeechService {
+    return this.speechService;
   }
 
   getResourceRegistry(): ResourceRegistry {
@@ -1617,6 +1627,10 @@ export class Config {
 
   isAutoSpeakEnabled(): boolean {
     return this.autoSpeak;
+  }
+
+  getSpeechStyle(): 'full' | 'highlights' {
+    return this.speechStyle;
   }
 
   getShellToolInactivityTimeout(): number {

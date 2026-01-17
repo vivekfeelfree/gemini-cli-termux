@@ -54,8 +54,6 @@ import {
   fireBeforeModelHook,
   fireBeforeToolSelectionHook,
 } from './geminiChatHookTriggers.js';
-import { spawn } from 'node:child_process';
-import { debugLogger } from '../utils/debugLogger.js';
 
 export enum StreamEventType {
   /** A regular content chunk from the API. */
@@ -869,30 +867,15 @@ export class GeminiChat {
       });
 
       // TERMUX PATCH: Native Auto-Speak
-      // This runs independently of the hooks system.
       if (this.config.isAutoSpeakEnabled()) {
-         try {
-            const child = spawn('termux-tts-speak', [], {
-              stdio: ['pipe', 'ignore', 'pipe'], 
-              detached: true,
-            });
-            
-            child.on('error', (err) => {
-               debugLogger.error('❌ Auto-speak spawn error:', err);
-            });
-
-            if (child.stderr) {
-                child.stderr.on('data', (data) => {
-                    debugLogger.error(`❌ TTS stderr: ${data}`);
-                });
-            }
-
-            child.stdin.write(responseText);
-            child.stdin.end();
-            child.unref();
-         } catch (e) {
-            debugLogger.error('❌ Failed to auto-speak response:', e);
-         }
+        const speechService = this.config.getSpeechService();
+        if (this.config.getSpeechStyle() === 'highlights') {
+          // Speak highlights (async, won't block displays)
+          void speechService.speakHighlights(responseText);
+        } else {
+          // Speak full text (async)
+          void speechService.speak(responseText);
+        }
       }
     }
 

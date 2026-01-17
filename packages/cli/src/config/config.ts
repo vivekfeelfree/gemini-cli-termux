@@ -777,7 +777,10 @@ export async function loadCliConfig(
     fileFiltering,
     checkpointing: settings.general?.checkpointing?.enabled,
     notifications: settings.notifications,
-    speech: settings.speech,
+    speech: {
+      autoSpeak: settings.speech?.autoSpeak,
+      style: settings.speech?.style as 'full' | 'highlights' | undefined,
+    },
     proxy:
       process.env['HTTPS_PROXY'] ||
       process.env['https_proxy'] ||

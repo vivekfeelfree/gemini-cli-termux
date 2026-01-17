@@ -359,6 +359,20 @@ const SETTINGS_SCHEMA = {
           'Automatically read aloud model responses using termux-tts-speak.',
         showInDialog: true,
       },
+      style: {
+        type: 'enum',
+        label: 'Speech Style',
+        category: 'General',
+        requiresRestart: false,
+        default: 'full',
+        description:
+          'Choose whether to speak the full response or just a concise highlight.',
+        showInDialog: true,
+        options: [
+          { value: 'full', label: 'Full Text' },
+          { value: 'highlights', label: 'Highlights Only' },
+        ],
+      },
     },
   },
   output: {
