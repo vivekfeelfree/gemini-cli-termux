@@ -776,6 +776,8 @@ export async function loadCliConfig(
     usageStatisticsEnabled: settings.privacy?.usageStatisticsEnabled,
     fileFiltering,
     checkpointing: settings.general?.checkpointing?.enabled,
+    notifications: settings.notifications,
+    speech: settings.speech,
     proxy:
       process.env['HTTPS_PROXY'] ||
       process.env['https_proxy'] ||
