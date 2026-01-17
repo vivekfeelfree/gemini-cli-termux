@@ -62,7 +62,6 @@ import {
 } from '../availability/policyHelpers.js';
 import { resolveModel } from '../config/models.js';
 import type { RetryAvailabilityContext } from '../utils/retry.js';
-import { spawn } from 'node:child_process';
 
 const MAX_TURNS = 100;
 
@@ -190,32 +189,6 @@ export class GeminiClient {
       turn?.getResponseText() ||
       '[no response text]';
     const finalRequest = hookState.originalRequest || currentRequest;
-
-    // TERMUX PATCH: Auto-speak response if enabled
-    if (this.config.isAutoSpeakEnabled() && finalResponseText) {
-      try {
-        const child = spawn('termux-tts-speak', [], {
-          stdio: ['pipe', 'ignore', 'pipe'], // Capture stderr
-          detached: true,
-        });
-        
-        child.on('error', (err) => {
-           debugLogger.error('❌ Auto-speak spawn error:', err);
-        });
-
-        if (child.stderr) {
-            child.stderr.on('data', (data) => {
-                debugLogger.error(`❌ TTS stderr: ${data}`);
-            });
-        }
-
-        child.stdin.write(finalResponseText);
-        child.stdin.end();
-        child.unref();
-      } catch (e) {
-        debugLogger.error('❌ Failed to auto-speak response (exception):', e);
-      }
-    }
 
     const hookOutput = await fireAfterAgentHook(
       messageBus,
